@@ -1,0 +1,52 @@
+loading=Loading... ## Loading generic message
+
+welcomeLogin=Log in now: ## Login welcome message
+loginOr=or ## 'or' word between login buttons: facebook or login
+
+buttonLogin=Log in ## Button login
+loginUsername=Username ## Label of field username for login
+loginPassword=Password ## Label of field password for login
+
+loadingLogin=logging in... ## Loading when click in login button
+loginError=Login error ## Message for login error
+
+loadingFacebookLogin=logging in (Facebook)... ## Loading when click in FB login button
+
+createAccount=Create Account ## link to create account
+
+buttonLoginWithFB=Login with Facebook ## Facebook login Button
+
+
+registerTitle=Register ## Register title
+registerName=Name ## Register name
+registerEmail=E-mail ## Register e-mail
+registerUsername=Username ## Register username
+registerPassword=Password ## Register password
+buttonRegister=Register ## Register button
+buttonDoLogin=Do log in ## Do log in button
+registerError=Error registering! Try again later... ## Message for register error
+
+
+
+profileTitle=PROFILE ## Profile title
+profileName=Name ## Profile name
+profileEmail=E-mail ## Profile e-mail
+profileUsername=Username ## Profile username
+profileLanguage=Language ## Profile language
+buttonChangePassword=Change Password ## Change password button
+buttonMyItems=My Items ## My items button
+buttonLogout=Logout ## Logout button
+
+
+changePassTitle=CHANGE PASSWORD ## Change password title
+currentPassword=Current password ## Current password field
+newPassword=New password ## New password field
+confirmNewPassword=Confirm new password ## Confirm new password field
+saveNewPassword=Save New Password ## Save new password button
+savePassError=Error saving password! Check current password. ## Message for saving password error
+
+
+reallyWantToLogout=Do you really want to leave? ## Logout confirm message
+buttonLogout=Logout ## Logout button
+buttonBack=Back ## Back button
+
