@@ -19,12 +19,12 @@ class OPRoot extends UIRoot implements GlobalUserListener {
 
   @override
   Future<bool> initializeLocale(String locale) {
-    return OCEAN_EXPRESS_APP.initializeMessages(locale) ;
+    return OCEAN_PRESS_APP.initializeMessages(locale) ;
   }
 
   @override
   Future<bool> isReady() {
-    return OCEAN_EXPRESS_APP.loginState.onLoad.listenAsFuture() ;
+    return OCEAN_PRESS_APP.loginState.onLoad.listenAsFuture() ;
   }
 
   @override
@@ -38,7 +38,7 @@ class OPRoot extends UIRoot implements GlobalUserListener {
 
     content.classes.add("ss-root") ;
 
-    OCEAN_EXPRESS_APP.initFacebookLogin() ;
+    OCEAN_PRESS_APP.initFacebookLogin() ;
 
     GlobalUser.listeners.add(this);
     GlobalUser.resumeLoginFunction = _resumeLogin ;
@@ -48,13 +48,13 @@ class OPRoot extends UIRoot implements GlobalUserListener {
       UINavigator.navigateTo("offline");
     }
     else if ( !UINavigator.hasRoute ) {
-      UINavigator.navigateTo( OCEAN_EXPRESS_APP.homeRoute );
+      UINavigator.navigateTo( OCEAN_PRESS_APP.homeRoute );
     }
 
   }
 
   void _doLoginResume() {
-    if ( OCEAN_EXPRESS_APP.usesLogin ) {
+    if ( OCEAN_PRESS_APP.usesLogin ) {
       GlobalUser.resumeLogin();
     }
   }
@@ -69,14 +69,14 @@ class OPRoot extends UIRoot implements GlobalUserListener {
     }
 
     UIConsole.log("_navigationBeforeResumeLogin: $_navigationBeforeResumeLogin") ;
-    OCEAN_EXPRESS_APP.system.loginResume(_processLoginResume);
+    OCEAN_PRESS_APP.system.loginResume(_processLoginResume);
     return null ;
   }
 
-  String get homeRoute => OCEAN_EXPRESS_APP.homeRoute ;
+  String get homeRoute => OCEAN_PRESS_APP.homeRoute ;
 
   set homeRoute(String route) {
-    OCEAN_EXPRESS_APP.homeRoute = route ;
+    OCEAN_PRESS_APP.homeRoute = route ;
   }
 
   void _processLoginResume(UserLogin user) {
@@ -127,13 +127,13 @@ class OPMenu extends UIComponent implements GlobalUserListener {
   @override
   render() {
     var logoDiv = createDivInline();
-    OCEAN_EXPRESS_APP.setupLogo(logoDiv, "menu") ;
-    UINavigator.navigateOnClick(logoDiv, OCEAN_EXPRESS_APP.homeRoute );
+    OCEAN_PRESS_APP.setupLogo(logoDiv, "menu") ;
+    UINavigator.navigateOnClick(logoDiv, OCEAN_PRESS_APP.homeRoute );
     logoDiv.style.verticalAlign = 'middle';
 
     OPMenuLoginButton loginButton = OPMenuLoginButton(content) ;
 
-    List<OPComponent> sections = OCEAN_EXPRESS_APP.getSections().where( (s) => s.isAccessible() && s.visibleInMenu ).toList() ;
+    List<OPComponent> sections = OCEAN_PRESS_APP.getSections().where( (s) => s.isAccessible() && s.visibleInMenu ).toList() ;
 
     DivElement sectionsDiv ;
     String sectionsDivSeparator ;
@@ -341,7 +341,7 @@ class OPMain extends UINavigableContent {
   }
 
   static List<String> getRoutes() {
-    List<String> sectionsRoutes = OCEAN_EXPRESS_APP.getSectionsRoutes() ;
+    List<String> sectionsRoutes = OCEAN_PRESS_APP.getSectionsRoutes() ;
 
     List<String> routes = List.from( getStandardRoutes() ) ;
     routes.addAll(sectionsRoutes) ;
@@ -354,8 +354,8 @@ class OPMain extends UINavigableContent {
   @override
   renderRoute(String route, Map<String, String> parameters) {
     if (route == 'login') {
-      if ( !OCEAN_EXPRESS_APP.usesLogin ) {
-        route = OCEAN_EXPRESS_APP.homeRoute ;
+      if ( !OCEAN_PRESS_APP.usesLogin ) {
+        route = OCEAN_PRESS_APP.homeRoute ;
 
         var currentRoute = UINavigator.currentRoute ;
         if (currentRoute == 'login') {
@@ -364,7 +364,7 @@ class OPMain extends UINavigableContent {
       }
     }
     else if (route == 'home') {
-      route = OCEAN_EXPRESS_APP.homeRoute ;
+      route = OCEAN_PRESS_APP.homeRoute ;
     }
 
     content.classes.removeWhere((c) => c.startsWith("ss-main-bg")) ;
@@ -398,7 +398,7 @@ class OPMain extends UINavigableContent {
       component = OPOffline(content) ;
     }
     else {
-      component = OCEAN_EXPRESS_APP.getSectionComponent(route, content) ;
+      component = OCEAN_PRESS_APP.getSectionComponent(route, content) ;
       if (component != null) {
         component.clear();
       }
@@ -496,7 +496,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
       ..hide()
     ;
 
-    var username = OCEAN_EXPRESS_APP.loginState.getUsername() ;
+    var username = OCEAN_PRESS_APP.loginState.getUsername() ;
 
     if ( username != null && RegExp("^FB\\d+\$").hasMatch(username) ) username = null ;
 
@@ -519,7 +519,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
 
     var buttonCreateAccount ;
 
-    if ( OCEAN_EXPRESS_APP.canCreateAccount ) {
+    if ( OCEAN_PRESS_APP.canCreateAccount ) {
       buttonCreateAccount = OPButton(content, messageCreateAccount, small: true, fontSize: "80%")
         ..id = 'buttonCreateAccount'
         ..onClick.listen(_onClickCreateAccount)
@@ -537,7 +537,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
     var selLanguage = UIRoot.getInstance().buildLanguageSelector(_onLanguageSelection) ;
     selLanguage.style.fontSize = '70%';
 
-    if ( !OCEAN_EXPRESS_APP.hasFacebookID ) {
+    if ( !OCEAN_PRESS_APP.hasFacebookID ) {
       buttonFacebook = null ;
       loadingFB = null ;
     }
@@ -586,7 +586,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
 
     getRenderedUIComponentById('loadingFB').show();
 
-    OCEAN_EXPRESS_APP.system.doFacebookLogin();
+    OCEAN_PRESS_APP.system.doFacebookLogin();
 
   }
 
@@ -606,7 +606,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
     var username = fields['username'];
     var pass = fields['password'];
 
-    OCEAN_EXPRESS_APP.system.login(username, pass, onGlobalUserLogin);
+    OCEAN_PRESS_APP.system.login(username, pass, onGlobalUserLogin);
     
   }
 
@@ -709,7 +709,7 @@ class OPRegister extends UIContent {
     var username = infosTable.getField("username");
     var pass = infosTable.getField("password");
 
-    OCEAN_EXPRESS_APP.system.register(name , email, username, pass, _registeredUser);
+    OCEAN_PRESS_APP.system.register(name , email, username, pass, _registeredUser);
 
   }
 
@@ -768,7 +768,7 @@ class OPProfile extends UIContent {
 
     var buttonChangePass ;
 
-    if ( OCEAN_EXPRESS_APP.canChangePassword ) {
+    if ( OCEAN_PRESS_APP.canChangePassword ) {
       html2 = "<p><hr><p>" ;
 
       buttonChangePass = OPButton(content, messageButtonChangePassword)
@@ -874,7 +874,7 @@ class OPChangePass extends UIContent {
 
     var currentPass = infosTable.getField("current_password");
 
-    OCEAN_EXPRESS_APP.system.changePassword(GlobalUser.user.username , currentPass, pass).then( _onSavedPass ) ;
+    OCEAN_PRESS_APP.system.changePassword(GlobalUser.user.username , currentPass, pass).then( _onSavedPass ) ;
 
   }
 
@@ -917,7 +917,7 @@ class OPLogout extends UIContent {
   }
 
   void _click(MouseEvent event) {
-    OCEAN_EXPRESS_APP.system.logout();
+    OCEAN_PRESS_APP.system.logout();
   }
 
 }

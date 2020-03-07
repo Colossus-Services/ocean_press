@@ -10,7 +10,7 @@ import 'ocean_press_ui.dart';
 
 ////////////////////////////////////////////////////////////////////////////////
 
-OceanExpressApp OCEAN_EXPRESS_APP = OceanExpressApp() ;
+OceanExpressApp OCEAN_PRESS_APP = OceanExpressApp() ;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -311,7 +311,7 @@ abstract class OceanAppSystem {
     user = GlobalUser.processLoginResponse(user, _userInstantiator);
 
     if ( user != null ) {
-      OCEAN_EXPRESS_APP.loginState.setUsername( GlobalUser.user.username ) ;
+      OCEAN_PRESS_APP.loginState.setUsername( GlobalUser.user.username ) ;
 
       if (processFunction != null) processFunction( GlobalUser.user ) ;
       return GlobalUser.user ;
@@ -345,7 +345,7 @@ abstract class OceanAppSystem {
       user = GlobalUser.processLoginResponse(user, _userInstantiator);
 
       if ( user != null ) {
-        OCEAN_EXPRESS_APP.loginState.setUsername( GlobalUser.user.username ) ;
+        OCEAN_PRESS_APP.loginState.setUsername( GlobalUser.user.username ) ;
 
         if (processFunction != null) processFunction( GlobalUser.user ) ;
         return GlobalUser.user ;
@@ -412,7 +412,7 @@ abstract class OceanAppSystem {
   }
 
   DynCallHttpClient getRestClient() {
-    return OCEAN_EXPRESS_APP.getHttpClient() ;
+    return OCEAN_PRESS_APP.getHttpClient() ;
   }
 
 }
