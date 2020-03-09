@@ -208,9 +208,9 @@ class OceanExpressApp {
     _homeRoute = route.isNotEmpty ? route : null ;
   }
 
-  Map<String, OPComponent> sections = {} ;
+  Map<String, OPSection> sections = {} ;
 
-  void registerSection(OPComponent section, [bool home]) {
+  void registerSection(OPSection section, [bool home]) {
     var route = section.route;
     if (route == null) throw ArgumentError("Section route can't be null: $section") ;
 
@@ -229,11 +229,11 @@ class OceanExpressApp {
     return List.from( sections.values.map( (s) => s.name ) ) ;
   }
 
-  List<OPComponent> getSections() {
+  List<OPSection> getSections() {
     return List.from( sections.values ) ;
   }
 
-  OPComponent getSectionComponent(String route, Element parent) {
+  OPSection getSection(String route, Element parent) {
     var section = sections[route] ;
     if (section == null) return null ;
     section.setParent(parent) ;

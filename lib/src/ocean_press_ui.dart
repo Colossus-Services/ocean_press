@@ -133,7 +133,7 @@ class OPMenu extends UIComponent implements GlobalUserListener {
 
     OPMenuLoginButton loginButton = OPMenuLoginButton(content) ;
 
-    List<OPComponent> sections = OCEAN_PRESS_APP.getSections().where( (s) => s.isAccessible() && s.visibleInMenu ).toList() ;
+    List<OPSection> sections = OCEAN_PRESS_APP.getSections().where( (s) => s.isAccessible() && s.visibleInMenu ).toList() ;
 
     DivElement sectionsDiv ;
     String sectionsDivSeparator ;
@@ -174,7 +174,7 @@ class OPMenu extends UIComponent implements GlobalUserListener {
     return divMenu;
   }
 
-  DivElement _buildSectionsInline(List<OPComponent> sections) {
+  DivElement _buildSectionsInline(List<OPSection> sections) {
     var div = createDivInline();
 
     int i = 0 ;
@@ -208,7 +208,7 @@ class OPMenu extends UIComponent implements GlobalUserListener {
 
 class OPMenuPanel extends UIComponent {
 
-  final List<OPComponent> _sections ;
+  final List<OPSection> _sections ;
 
   OPMenuPanel(Element parent, this._sections) : super(parent);
 
@@ -255,7 +255,7 @@ class OPMenuPanel extends UIComponent {
     return divMenuParent ;
   }
 
-  DivElement createMenuPanel(int width, List<OPComponent> sections) {
+  DivElement createMenuPanel(int width, List<OPSection> sections) {
     var dimStyle = "width: ${width}px" ;
 
     String sectionsHTML = "" ;
@@ -398,7 +398,7 @@ class OPMain extends UINavigableContent {
       component = OPOffline(content) ;
     }
     else {
-      component = OCEAN_PRESS_APP.getSectionComponent(route, content) ;
+      component = OCEAN_PRESS_APP.getSection(route, content) ;
       if (component != null) {
         component.clear();
       }

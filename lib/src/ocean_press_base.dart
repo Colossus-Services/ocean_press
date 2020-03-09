@@ -99,14 +99,14 @@ class OPLoading extends UIComponent {
 }
 
 
-abstract class OPComponent extends UIContent {
+abstract class OPSection extends UIContent {
   String _route ;
   String _name ;
   bool _hideFromMenu ;
   String _deniedAccessRoute ;
   FunctionTest _isAccessible ;
 
-  OPComponent( { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible } ) : super( DivElement() , topMargin: _topSpace) {
+  OPSection( { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible } ) : super( DivElement() , topMargin: _topSpace) {
     this._route = route ;
     this._name = name ?? route ;
     this._hideFromMenu = hideFromMenu ?? false ;
