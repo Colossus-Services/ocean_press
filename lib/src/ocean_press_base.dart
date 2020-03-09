@@ -17,7 +17,7 @@ class OPButton extends UIButton {
   final String fontSize ;
 
   OPButton(Element parent, this.text, {String navigate, Map<String,String> navigateParameters, Map<String,String> navigateParametersProvider(), dynamic classes, bool small = false, this.fontSize}) : super(parent, navigate: navigate, navigateParameters: navigateParameters, navigateParametersProvider: navigateParametersProvider, classes: classes) {
-    configureClasses( classes , [ small ? "ss-button-small" : "ss-button" ] ) ;
+    configureClasses( classes , [ small ? 'ui-button-small' : 'ui-button' ] ) ;
   }
 
   @override
@@ -70,12 +70,12 @@ class OPLoading extends UIComponent {
 
     if ( hasText ) {
       html = """
-      <div style='display: inline-block; text-align: center;'><div class='ss-loader' style='display: inline-block;'></div><br/><span id='_loadingText' class='ss-loader-text' style='display: inline-block; text-align: center;'>$text</span></div>
+      <div style='display: inline-block; text-align: center;'><div class='ui-loader' style='display: inline-block;'></div><br/><span id='_loadingText' class='ui-loader-text' style='display: inline-block; text-align: center;'>$text</span></div>
       """;
     }
     else {
       html = """
-      <div style='display: inline-block; text-align: center;'><div class='ss-loader' style='display: inline-block;'></div></div>
+      <div style='display: inline-block; text-align: center;'><div class='ui-loader' style='display: inline-block;'></div></div>
       """;
     }
 

@@ -10,12 +10,12 @@ import 'ocean_press_base.dart';
 import 'ocean_press_sys.dart';
 
 
-final int _topSpace = 60 ;
+int UI_CONTENT_TOP_MARGIN = 80 ;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 class OPRoot extends UIRoot implements GlobalUserListener {
-  OPRoot(Element container) : super(container, classes: 'ss-root');
+  OPRoot(Element container) : super(container, classes: 'ui-root');
 
   @override
   Future<bool> initializeLocale(String locale) {
@@ -36,7 +36,7 @@ class OPRoot extends UIRoot implements GlobalUserListener {
 
     disableZooming() ;
 
-    content.classes.add("ss-root") ;
+    content.classes.add('ui-root') ;
 
     OCEAN_PRESS_APP.initFacebookLogin() ;
 
@@ -117,7 +117,7 @@ class OPRoot extends UIRoot implements GlobalUserListener {
 }
 
 class OPMenu extends UIComponent implements GlobalUserListener {
-  OPMenu(Element parent) : super(parent, classes: 'ss-menu');
+  OPMenu(Element parent) : super(parent, classes: 'ui-menu');
 
   @override
   void configure() {
@@ -160,13 +160,13 @@ class OPMenu extends UIComponent implements GlobalUserListener {
     var dimStyle = "width: ${width}px ; height: ${height/5}px" ;
 
     var divMenu = createDivInline('''
-    <div style="width: ${width} ; height: ${height}" class="ss-menu-icon">
+    <div style="width: ${width} ; height: ${height}" class="ui-menu-icon">
       <div style=" width: ${width}px ; height: ${topMargin}px"></div>
-      <div style="$dimStyle" class="ss-menu-icon-line"></div>
+      <div style="$dimStyle" class="ui-menu-icon-line"></div>
       <div style="$dimStyle"></div>
-      <div style="$dimStyle" class="ss-menu-icon-line"></div>
+      <div style="$dimStyle" class="ui-menu-icon-line"></div>
       <div style="$dimStyle"></div>
-      <div style="$dimStyle" class="ss-menu-icon-line"></div>
+      <div style="$dimStyle" class="ui-menu-icon-line"></div>
       <div style="$dimStyle"></div>
     </div>
     ''') ;
@@ -239,7 +239,7 @@ class OPMenuPanel extends UIComponent {
   @override
   render() {
     var divMenuParent = createHTML('''
-    <div class="ss-menu-panel-parent">
+    <div class="ui-menu-panel-parent">
     </div>
     ''') ;
 
@@ -261,7 +261,7 @@ class OPMenuPanel extends UIComponent {
     String sectionsHTML = "" ;
 
     for (var section in sections) {
-      String itemClass = section.isCurrentRoute ? "ss-menu-panel-item-selected" : "ss-menu-panel-item" ;
+      String itemClass = section.isCurrentRoute ? "ui-menu-panel-item-selected" : "ui-menu-panel-item" ;
 
       sectionsHTML += '''
       <div style="$dimStyle" class="$itemClass" navigate="${ section.route }">${ section.name }</div>
@@ -270,7 +270,7 @@ class OPMenuPanel extends UIComponent {
     }
 
     var divMenuPanel = createHTML('''
-    <div style="width: ${width}px;" class="ss-menu-panel">
+    <div style="width: ${width}px;" class="ui-menu-panel">
       $sectionsHTML
     </div>
     ''') ;
@@ -282,7 +282,7 @@ class OPMenuPanel extends UIComponent {
 }
 
 class OPMenuLoginButton extends UIButton implements GlobalUserListener {
-  OPMenuLoginButton(Element parent) : super(parent, classes: 'ss-login-button');
+  OPMenuLoginButton(Element parent) : super(parent, classes: 'ui-login-button');
 
   @override
   void configure() {
@@ -312,15 +312,15 @@ class OPMenuLoginButton extends UIButton implements GlobalUserListener {
       var loginType = user.loginType;
 
       if (user is FBUserLogin) {
-        return "<div style='display: inline-block ; padding-bottom: 4px ; vertical-align: middle'><img class='ss-login-button-img' title='${ name } (LOGIN: ${ loginType })' border='1' width='20' height='20' src='${ user.pictureURL }'></div>";
+        return "<div style='display: inline-block ; padding-bottom: 4px ; vertical-align: middle'><img class='ui-login-button-img' title='${ name } (LOGIN: ${ loginType })' border='1' width='20' height='20' src='${ user.pictureURL }'></div>";
       }
       else {
         var nameInitial = user.nameInitial;
-        return "<div class='ss-login-button-initial' style='width: 20px ; height: 20px ; font-size: 95% ; font-weight: bold ; text-align: center ; line-height: 1.43em' title='$name (LOGIN: $loginType)'>$nameInitial</div>";
+        return "<div class='ui-login-button-initial' style='width: 20px ; height: 20px ; font-size: 95% ; font-weight: bold ; text-align: center ; line-height: 1.43em' title='$name (LOGIN: $loginType)'>$nameInitial</div>";
       }
     }
     else {
-      //return "<div style='display: inline-block ; padding-bottom: 4px ; vertical-align: middle'><img class='ss-login-button-img' border='1' width='20' height='20' src='images/user-login.png'></div>";
+      //return "<div style='display: inline-block ; padding-bottom: 4px ; vertical-align: middle'><img class='ui-login-button-img' border='1' width='20' height='20' src='images/user-login.png'></div>";
       return "";
     }
 
@@ -349,7 +349,7 @@ class OPMain extends UINavigableContent {
     return routes ;
   }
 
-  OPMain(Element parent) : super(parent, getRoutes(), classes: 'ss-main', topMargin: _topSpace);
+  OPMain(Element parent) : super(parent, getRoutes(), classes: 'ui-main', topMargin: UI_CONTENT_TOP_MARGIN);
 
   @override
   renderRoute(String route, Map<String, String> parameters) {
@@ -367,7 +367,7 @@ class OPMain extends UINavigableContent {
       route = OCEAN_PRESS_APP.homeRoute ;
     }
 
-    content.classes.removeWhere((c) => c.startsWith("ss-main-bg")) ;
+    content.classes.removeWhere((c) => c.startsWith('ui-main-bg')) ;
 
     int bg = 1 ;
 
@@ -404,7 +404,7 @@ class OPMain extends UINavigableContent {
       }
     }
 
-    content.classes.add("ss-main-bg$bg") ;
+    content.classes.add("ui-main-bg$bg") ;
 
     scrollToTopAsync(500) ;
 
@@ -415,7 +415,7 @@ class OPMain extends UINavigableContent {
 }
 
 class OPHomeLogin extends UIContent {
-  OPHomeLogin(Element parent) : super(parent, classes: 'ss-login');
+  OPHomeLogin(Element parent) : super(parent, classes: 'ui-login');
 
   @override
   bool isAccessible() {
@@ -439,7 +439,7 @@ class OPHomeLogin extends UIContent {
     var login = SSLogin(content) ;
 
     var footDiv = DivElement();
-    footDiv.classes.add('ss-login-footer');
+    footDiv.classes.add('ui-login-footer');
     footDiv.innerHtml = '&nbsp;';
 
     return [login, footDiv] ;
@@ -448,7 +448,7 @@ class OPHomeLogin extends UIContent {
 }
 
 class SSLogin extends UIContent {
-  SSLogin(Element parent) : super(parent, classes: 'ss-login');
+  SSLogin(Element parent) : super(parent, classes: 'ui-login');
 
   @override
   renderContent() {
@@ -461,7 +461,7 @@ class SSLogin extends UIContent {
 }
 
 class SSLoginContent extends UIContent implements GlobalUserListener {
-  SSLoginContent(Element parent) : super(parent, classes: 'ss-content');
+  SSLoginContent(Element parent) : super(parent, classes: 'ui-content');
 
   @override
   void configure() {
@@ -526,7 +526,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
       ;
     }
 
-    var htmlLoginError = "<br><div field='msgLoginError' hidden><span class='ss-text-red' style='font-size: 85%'><br>$messageLoginError</span></div>" ;
+    var htmlLoginError = "<br><div field='msgLoginError' hidden><span class='ui-text-alert' style='font-size: 85%'><br>$messageLoginError</span></div>" ;
 
     var labelLanguage = createDivInline(
         """
@@ -633,13 +633,13 @@ class SSButtonFB extends OPButton {
 
   static String get messageButtonLoginWithFB => OCEAN_PRESS_MESSAGES.msg("buttonLoginWithFB").build() ;
 
-  SSButtonFB(Element parent) : super(parent, messageButtonLoginWithFB, classes: ['ss-button-fb' , '!ss-button', '!ss-button-small'] );
+  SSButtonFB(Element parent) : super(parent, messageButtonLoginWithFB, classes: ['ui-button-fb' , '!ui-button', '!ui-button-small'] );
 
 }
 
 
 class OPRegister extends UIContent {
-  OPRegister(Element parent) : super(parent, classes: ['ss-content','ss-register']);
+  OPRegister(Element parent) : super(parent, classes: ['ui-content','ui-register']);
 
   @override
   bool isAccessible() {
@@ -666,7 +666,7 @@ class OPRegister extends UIContent {
   renderContent() {
 
     String html1 = """
-    <div class='ss-title'>$messageRegisterTitle</div>
+    <div class='ui-title'>$messageRegisterTitle</div>
     <p>
     """ ;
 
@@ -675,18 +675,18 @@ class OPRegister extends UIContent {
       InputConfig('email', messageRegisterEmail, type: 'email'),
       InputConfig('username', messageRegisterUsername),
       InputConfig('password', messageRegisterPassword, type: 'password', attributes: {'onEventKeyPress': 'Enter:register'})
-    ], "ss-input-error");
+    ], 'ui-input-error');
 
     var buttonRegister = OPButton(content, messageButtonRegister)
       ..setWideButton()
       ..onClick.listen(_register)
     ;
 
-    var buttonLogin = OPButton(content, messageButtonDoLogin, small: true, fontSize: "80%")
-      ..navigate("login")
+    var buttonLogin = OPButton(content, messageButtonDoLogin, small: true, fontSize: '80%')
+      ..navigate('login')
     ;
 
-    var htmlRegisterError = "<br><div field='messageRegisterError' hidden><span class='ss-text-red' style='font-size: 85%'><br>$messageRegisterError</span></div>" ;
+    var htmlRegisterError = "<br><div field='messageRegisterError' hidden><span class='ui-text-alert' style='font-size: 85%'><br>$messageRegisterError</span></div>" ;
 
     return [html1, '<hr>', infosTable, '<p>', buttonRegister, htmlRegisterError, '<hr><p>', buttonLogin] ;
   }
@@ -724,7 +724,7 @@ class OPRegister extends UIContent {
 }
 
 class OPProfile extends UIContent {
-  OPProfile(Element parent) : super(parent, classes: 'ss-content');
+  OPProfile(Element parent) : super(parent, classes: 'ui-content');
 
   @override
   bool isAccessible() {
@@ -749,7 +749,7 @@ class OPProfile extends UIContent {
   renderContent() {
 
     String html1 = """
-    <div class='ss-title'>$messageProfileTitle</div>
+    <div class='ui-title'>$messageProfileTitle</div>
     <p>
     """ ;
 
@@ -812,7 +812,7 @@ class OPProfile extends UIContent {
 }
 
 class OPChangePass extends UIContent {
-  OPChangePass(Element parent) : super(parent, classes: 'ss-content');
+  OPChangePass(Element parent) : super(parent, classes: 'ui-content');
 
   @override
   bool isAccessible() {
@@ -837,7 +837,7 @@ class OPChangePass extends UIContent {
   renderContent() {
 
     String html1 = """
-    <div class='ss-title'>$messageChangePassTitle</div>
+    <div class='ui-title'>$messageChangePassTitle</div>
     <p>
     """ ;
 
@@ -845,14 +845,14 @@ class OPChangePass extends UIContent {
       InputConfig('current_password', messageCurrentPassword, type: 'password'),
       InputConfig('password', messageNewPassword, type: 'password'),
       InputConfig('password_confirm', messageConfirmNewPassword, type: 'password', attributes: {'onEventKeyPress': 'Enter:register'})
-    ], "ss-input-error");
+    ], "ui-input-error");
 
     var buttonSavePass = OPButton(content, messageSaveNewPassword)
     //..setWideButton()
       ..onClick.listen(_savePass)
     ;
 
-    var htmlSaveError = "<br><div field='messageError' hidden><span class='ss-text-red' style='font-size: 85%'><br>$messageSavePassError</span></div>" ;
+    var htmlSaveError = "<br><div field='messageError' hidden><span class='ui-text-alert' style='font-size: 85%'><br>$messageSavePassError</span></div>" ;
 
     return [html1, infosTable, '<p>', buttonSavePass, htmlSaveError] ;
   }
@@ -890,7 +890,7 @@ class OPChangePass extends UIContent {
 }
 
 class OPLogout extends UIContent {
-  OPLogout(Element parent) : super(parent, classes: 'ss-content');
+  OPLogout(Element parent) : super(parent, classes: 'ui-content');
 
   String get messageReallyWantToLogout => OCEAN_PRESS_MESSAGES.msg("reallyWantToLogout").build() ;
   String get messageButtonLogout => OCEAN_PRESS_MESSAGES.msg("buttonLogout").build() ;
@@ -923,7 +923,7 @@ class OPLogout extends UIContent {
 }
 
 class OPOffline extends UIContent {
-  OPOffline(Element parent) : super(parent, topMargin: _topSpace);
+  OPOffline(Element parent) : super(parent);
 
   @override
   renderContent() {
