@@ -1,3 +1,13 @@
+## 1.0.4
+
+- OPLoading.topMargin
+- OceanExpressApp.getAccessibleSections()
+- bones_ui: ^1.0.3
+- swiss_knife: ^2.3.5
+- mercury_client: ^1.1.2
+- dynamic_call: ^1.0.6
+- intl_messages: ^1.1.4
+
 ## 1.0.3
 
 - Use CSS prefix 'ui-' for components.

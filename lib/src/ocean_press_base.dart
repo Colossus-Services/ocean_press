@@ -8,8 +8,6 @@ import 'package:ocean_press/ocean_press.dart';
 IntlMessages OCEAN_PRESS_MESSAGES = IntlMessages.package("/ocean_press/")
                         ..registerResourceDiscover(IntlResourceDiscover("package:ocean_press/i18n/ocean_press-msgs-",".intl")) ;
 
-final int _topSpace = 60 ;
-
 ////////////////////////////////////////////////////////////////////////////////
 
 class OPButton extends UIButton {
@@ -52,8 +50,9 @@ class OPLoading extends UIComponent {
   MessageBuilder msgLoading = OCEAN_PRESS_MESSAGES.msg("loading") ;
 
   String _text ;
+  int topMargin ;
 
-  OPLoading(Element parent, [this._text, bool show = true]) : super(parent, inline: true) {
+  OPLoading(Element parent, { String text, bool show = true, this.topMargin }) : _text = text , super(parent, inline: true) {
     if (!show) hide();
   }
 
@@ -66,15 +65,22 @@ class OPLoading extends UIComponent {
 
     content.style.verticalAlign = 'middle';
 
+    var divTopMargin = '';
+    if (topMargin != null && topMargin > 0) {
+      divTopMargin = "<div style='display: inline-block; margin: ${topMargin}px 0 0 0'></div>" ;
+    }
+
     String html ;
 
     if ( hasText ) {
       html = """
+      $divTopMargin
       <div style='display: inline-block; text-align: center;'><div class='ui-loader' style='display: inline-block;'></div><br/><span id='_loadingText' class='ui-loader-text' style='display: inline-block; text-align: center;'>$text</span></div>
       """;
     }
     else {
       html = """
+      $divTopMargin
       <div style='display: inline-block; text-align: center;'><div class='ui-loader' style='display: inline-block;'></div></div>
       """;
     }
@@ -106,7 +112,7 @@ abstract class OPSection extends UIContent {
   String _deniedAccessRoute ;
   FunctionTest _isAccessible ;
 
-  OPSection( { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible } ) : super( DivElement() , topMargin: _topSpace) {
+  OPSection( { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible } ) : super( DivElement() ) {
     this._route = route ;
     this._name = name ?? route ;
     this._hideFromMenu = hideFromMenu ?? false ;

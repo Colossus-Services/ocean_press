@@ -233,6 +233,11 @@ class OceanExpressApp {
     return List.from( sections.values ) ;
   }
 
+  List<OPSection> getAccessibleSections( [bool onlyVisibleInMenu] ) {
+    onlyVisibleInMenu ??= false ;
+    return getSections().where( (s) => s.isAccessible() && ( !onlyVisibleInMenu || s.visibleInMenu ) ).toList() ;
+  }
+
   OPSection getSection(String route, Element parent) {
     var section = sections[route] ;
     if (section == null) return null ;

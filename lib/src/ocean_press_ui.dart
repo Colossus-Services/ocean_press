@@ -10,7 +10,7 @@ import 'ocean_press_base.dart';
 import 'ocean_press_sys.dart';
 
 
-int UI_CONTENT_TOP_MARGIN = 80 ;
+int UI_MAIN_CONTENT_TOP_MARGIN = 80 ;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -119,9 +119,43 @@ class OPRoot extends UIRoot implements GlobalUserListener {
 class OPMenu extends UIComponent implements GlobalUserListener {
   OPMenu(Element parent) : super(parent, classes: 'ui-menu');
 
+  TrackElementResize _trackElementResize ;
+
   @override
   void configure() {
     GlobalUser.listeners.add(this) ;
+
+    window.onResize.listen( _onAdjustWindow ) ;
+
+    _trackElementResize = TrackElementResize() ;
+    _trackElementResize.track(content, onContentResize) ;
+
+    _onAdjustWindow() ;
+  }
+
+  void onContentResize( Element elem ) {
+    _onAdjustWindow() ;
+  }
+
+  static final EventStream<OPMenu> onResize = EventStream() ;
+
+  void _onAdjustWindow( [dynamic event] ) {
+    var offsetHeight = content.offset.height;
+
+    if (offsetHeight == 0) return ;
+
+    var topMargin = offsetHeight+20 ;
+
+    if ( topMargin != UI_MAIN_CONTENT_TOP_MARGIN ) {
+      UI_MAIN_CONTENT_TOP_MARGIN = topMargin ;
+      onResize.add(this) ;
+    }
+  }
+
+  @override
+  void posRender() {
+    super.posRender();
+    _onAdjustWindow() ;
   }
 
   @override
@@ -133,9 +167,9 @@ class OPMenu extends UIComponent implements GlobalUserListener {
 
     OPMenuLoginButton loginButton = OPMenuLoginButton(content) ;
 
-    List<OPSection> sections = OCEAN_PRESS_APP.getSections().where( (s) => s.isAccessible() && s.visibleInMenu ).toList() ;
+    List<OPSection> sections = OCEAN_PRESS_APP.getAccessibleSections(true) ;
 
-    DivElement sectionsDiv ;
+    UIComponent inlineSections ;
     String sectionsDivSeparator ;
 
     DivElement divMenuIcon ;
@@ -147,11 +181,11 @@ class OPMenu extends UIComponent implements GlobalUserListener {
       divMenuIcon.onClick.listen( (e) => menuPanel.showPanel() );
     }
     else if ( sections.isNotEmpty ) {
-      sectionsDiv = _buildSectionsInline(sections) ;
+      inlineSections = OPMenuInlineSections(content, sections) ;
       sectionsDivSeparator = "&nbsp; &nbsp;" ;
     }
 
-    return [divMenuIcon, "&nbsp; &nbsp;" ,logoDiv, "&nbsp; &nbsp;" , sectionsDiv , sectionsDivSeparator, loginButton, "&nbsp;", menuPanel];
+    return [divMenuIcon, "&nbsp; &nbsp;" ,logoDiv, "&nbsp; &nbsp;" , inlineSections , sectionsDivSeparator, loginButton, "&nbsp;", menuPanel];
   }
 
   DivElement createMenuIcon(int width, int height, [int topMargin]) {
@@ -174,7 +208,30 @@ class OPMenu extends UIComponent implements GlobalUserListener {
     return divMenu;
   }
 
-  DivElement _buildSectionsInline(List<OPSection> sections) {
+  @override
+  void onGlobalUserLogin(UserLogin user) {
+    refresh();
+  }
+
+}
+
+class OPMenuInlineSections extends UIComponent {
+
+  final List<OPSection> sections ;
+
+  OPMenuInlineSections(Element parent, this.sections) : super(parent);
+
+  @override
+  void configure() {
+    UINavigator.onNavigate.listen( _onNavigate ) ;
+  }
+
+  void _onNavigate( [dynamic event] ) {
+    refresh();
+  }
+
+  @override
+  render() {
     var div = createDivInline();
 
     int i = 0 ;
@@ -183,13 +240,18 @@ class OPMenu extends UIComponent implements GlobalUserListener {
 
       if (i > 0) {
         var sep = SpanElement()
-          ..text = " | " ;
+          ..innerHtml = " &nbsp; "
+        ;
         div.children.add( sep ) ;
       }
 
       var sect = SpanElement()
-        ..text = section.name ;
+        ..innerHtml = '&bull; ${section.name}' ;
       div.children.add( sect ) ;
+
+      if ( section.isCurrentRoute ) {
+        sect.style.fontWeight = 'bold' ;
+      }
 
       UINavigator.navigateOnClick( sect , section.route ) ;
 
@@ -199,10 +261,6 @@ class OPMenu extends UIComponent implements GlobalUserListener {
     return div ;
   }
 
-  @override
-  void onGlobalUserLogin(UserLogin user) {
-    refresh();
-  }
 
 }
 
@@ -282,7 +340,7 @@ class OPMenuPanel extends UIComponent {
 }
 
 class OPMenuLoginButton extends UIButton implements GlobalUserListener {
-  OPMenuLoginButton(Element parent) : super(parent, classes: 'ui-login-button');
+  OPMenuLoginButton(Element parent) : super(parent, classes: ['ui-login-button','!ui-button']);
 
   @override
   void configure() {
@@ -349,7 +407,17 @@ class OPMain extends UINavigableContent {
     return routes ;
   }
 
-  OPMain(Element parent) : super(parent, getRoutes(), classes: 'ui-main', topMargin: UI_CONTENT_TOP_MARGIN);
+  OPMain(Element parent) : super(parent, getRoutes(), classes: 'ui-main', topMargin: UI_MAIN_CONTENT_TOP_MARGIN);
+
+  @override
+  void configure() {
+    OPMenu.onResize.listen( (e) {
+      if ( topMargin != UI_MAIN_CONTENT_TOP_MARGIN ) {
+        topMargin = UI_MAIN_CONTENT_TOP_MARGIN;
+        refresh();
+      }
+    } ) ;
+  }
 
   @override
   renderRoute(String route, Map<String, String> parameters) {
@@ -491,7 +559,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
       ..onClick.listen(_onClickFBLogin)
     ;
 
-    var loadingFB = OPLoading(content, messageLoadingFacebookLogin)
+    var loadingFB = OPLoading(content, text: messageLoadingFacebookLogin)
       ..id = 'loadingFB'
       ..hide()
     ;
@@ -512,7 +580,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
       ..onClick.listen(_onClickLogin)
     ;
 
-    var loading = OPLoading(content, messageLoadingLogin)
+    var loading = OPLoading(content, text: messageLoadingLogin)
       ..id = 'loading'
       ..hide()
     ;
@@ -675,7 +743,7 @@ class OPRegister extends UIContent {
       InputConfig('email', messageRegisterEmail, type: 'email'),
       InputConfig('username', messageRegisterUsername),
       InputConfig('password', messageRegisterPassword, type: 'password', attributes: {'onEventKeyPress': 'Enter:register'})
-    ], 'ui-input-error');
+    ], inputErrorClass: 'ui-input-error');
 
     var buttonRegister = OPButton(content, messageButtonRegister)
       ..setWideButton()
@@ -845,7 +913,7 @@ class OPChangePass extends UIContent {
       InputConfig('current_password', messageCurrentPassword, type: 'password'),
       InputConfig('password', messageNewPassword, type: 'password'),
       InputConfig('password_confirm', messageConfirmNewPassword, type: 'password', attributes: {'onEventKeyPress': 'Enter:register'})
-    ], "ui-input-error");
+    ], inputErrorClass: "ui-input-error");
 
     var buttonSavePass = OPButton(content, messageSaveNewPassword)
     //..setWideButton()
