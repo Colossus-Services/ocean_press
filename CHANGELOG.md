@@ -1,3 +1,12 @@
+## 1.0.5
+
+- Better OPMenu behavior.
+- bones_ui: ^1.0.4
+- swiss_knife: ^2.3.7
+- mercury_client: ^1.1.3
+- intl_messages: ^1.1.5
+- social_login_web: ^1.0.1
+
 ## 1.0.4
 
 - OPLoading.topMargin

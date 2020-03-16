@@ -125,29 +125,45 @@ class OPMenu extends UIComponent implements GlobalUserListener {
   void configure() {
     GlobalUser.listeners.add(this) ;
 
-    window.onResize.listen( _onAdjustWindow ) ;
+    window.onResize.listen( _adjustSize ) ;
 
     _trackElementResize = TrackElementResize() ;
     _trackElementResize.track(content, onContentResize) ;
 
-    _onAdjustWindow() ;
+    _adjustSize() ;
   }
 
   void onContentResize( Element elem ) {
-    _onAdjustWindow() ;
+    _adjustSize() ;
   }
 
   static final EventStream<OPMenu> onResize = EventStream() ;
 
-  void _onAdjustWindow( [dynamic event] ) {
-    var offsetHeight = content.offset.height;
+  int menuHeight = 0 ;
 
+  void _adjustSize( [dynamic event] ) {
+    var offsetHeight = content.offset.height;
     if (offsetHeight == 0) return ;
+
+    menuHeight = offsetHeight ;
 
     var topMargin = offsetHeight+20 ;
 
+    bool resized = false ;
+
     if ( topMargin != UI_MAIN_CONTENT_TOP_MARGIN ) {
       UI_MAIN_CONTENT_TOP_MARGIN = topMargin ;
+      resized = true ;
+    }
+
+    if (_inlineMenuWidth != null && !isRendering ) {
+      var canRenderInline = _canRenderSectionsInLine();
+      if ( _renderedInline != canRenderInline ) {
+        refresh();
+      }
+    }
+
+    if (resized) {
       onResize.add(this) ;
     }
   }
@@ -155,15 +171,22 @@ class OPMenu extends UIComponent implements GlobalUserListener {
   @override
   void posRender() {
     super.posRender();
-    _onAdjustWindow() ;
+    _adjustSize() ;
   }
+
+  int _inlineMenuWidth ;
+  bool _renderedInline ;
 
   @override
   render() {
+    content.style.verticalAlign = 'middle';
+
     var logoDiv = createDivInline();
     OCEAN_PRESS_APP.setupLogo(logoDiv, "menu") ;
     UINavigator.navigateOnClick(logoDiv, OCEAN_PRESS_APP.homeRoute );
     logoDiv.style.verticalAlign = 'middle';
+
+    content.children.add(logoDiv) ;
 
     OPMenuLoginButton loginButton = OPMenuLoginButton(content) ;
 
@@ -175,17 +198,58 @@ class OPMenu extends UIComponent implements GlobalUserListener {
     DivElement divMenuIcon ;
     OPMenuPanel menuPanel ;
 
-    if ( sections.length > 2 ) {
+    _inlineMenuWidth = _computeInlineMenuWidth([logoDiv, loginButton.content], sections) ;
+
+    if ( !_canRenderSectionsInLine() ) {
+      _renderedInline = false ;
       divMenuIcon = createMenuIcon(27, 20, 4);
-      menuPanel = OPMenuPanel(content, sections) ;
+      menuPanel = OPMenuPanel(this, content, sections) ;
       divMenuIcon.onClick.listen( (e) => menuPanel.showPanel() );
     }
     else if ( sections.isNotEmpty ) {
+      _renderedInline = true ;
       inlineSections = OPMenuInlineSections(content, sections) ;
       sectionsDivSeparator = "&nbsp; &nbsp;" ;
     }
 
     return [divMenuIcon, "&nbsp; &nbsp;" ,logoDiv, "&nbsp; &nbsp;" , inlineSections , sectionsDivSeparator, loginButton, "&nbsp;", menuPanel];
+  }
+
+  bool _canRenderSectionsInLine() {
+    var viewWidth = window.visualViewport.width ;
+    return _inlineMenuWidth < viewWidth ;
+  }
+
+  int _computeInlineMenuWidth( List<Element> otherElements, List<OPSection> sections) {
+    if ( sections.isEmpty ) return 0 ;
+
+    int otherWidth = 100 ;
+    for (var e in otherElements) {
+      if (e == null) continue;
+      otherWidth += e.offsetWidth ;
+    }
+
+    var fullText = '';
+
+    for (var e in sections) {
+      fullText += '* $e   ' ;
+    }
+
+    var canvas = CanvasElement(width: 1, height: 1) ;
+
+    content.children.add(canvas) ;
+
+    CanvasRenderingContext2D context = canvas.getContext('2d') ;
+
+    var measureText = context.measureText(fullText) ;
+
+    canvas.remove() ;
+
+    var textWidth = measureText.width ;
+
+    var inlineMenuWidth = (textWidth + otherWidth).toInt() ;
+
+    return inlineMenuWidth ;
   }
 
   DivElement createMenuIcon(int width, int height, [int topMargin]) {
@@ -194,7 +258,7 @@ class OPMenu extends UIComponent implements GlobalUserListener {
     var dimStyle = "width: ${width}px ; height: ${height/5}px" ;
 
     var divMenu = createDivInline('''
-    <div style="width: ${width} ; height: ${height}" class="ui-menu-icon">
+    <div class="ui-menu-icon" style="width: ${width} ; height: ${height} ; display: inline-block ; vertical-align: middle">
       <div style=" width: ${width}px ; height: ${topMargin}px"></div>
       <div style="$dimStyle" class="ui-menu-icon-line"></div>
       <div style="$dimStyle"></div>
@@ -266,21 +330,25 @@ class OPMenuInlineSections extends UIComponent {
 
 class OPMenuPanel extends UIComponent {
 
+  final OPMenu opMenu ;
   final List<OPSection> _sections ;
 
-  OPMenuPanel(Element parent, this._sections) : super(parent);
+  OPMenuPanel(this.opMenu, Element parent, this._sections) : super(parent);
 
   @override
   void configure() {
     hide();
-
     UINavigator.onNavigate.listen( (route) => refresh() ) ;
   }
 
-  fixPanelPos() {
-    var topMenuHeight = parent.offsetHeight;
+  void fixPanelPos() {
+    var parentHeight = parent.borderEdge.height ;
+    var content = divMenuPanel ?? this.content ;
+    var margin = content.offset.top - content.marginEdge.top ;
+
+    var topMenuHeight = parentHeight + margin ;
+
     if (topMenuHeight != null && topMenuHeight > 0) {
-      print("Set MENU Panel pos: $topMenuHeight");
       content.style.top = "${topMenuHeight}px";
     }
   }
@@ -294,6 +362,8 @@ class OPMenuPanel extends UIComponent {
     hide();
   }
 
+  DivElement divMenuPanel ;
+
   @override
   render() {
     var divMenuParent = createHTML('''
@@ -302,6 +372,8 @@ class OPMenuPanel extends UIComponent {
     ''') ;
 
     var divMenuPanel = createMenuPanel(200, _sections);
+
+    this.divMenuPanel = divMenuPanel ;
 
     divMenuPanel.onMouseLeave.listen( (e) => closePanel() );
     divMenuPanel.onTouchLeave.listen( (e) => closePanel() );
