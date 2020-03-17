@@ -105,14 +105,67 @@ class OPLoading extends UIComponent {
 }
 
 
-abstract class OPSection extends UIContent {
+abstract class OPSection {
+
+  setParent(Element parent) ;
+
+  String get route ;
+  bool get isCurrentRoute ;
+
+  String get name ;
+
+  bool get hideFromMenu ;
+  bool get visibleInMenu ;
+
+  bool isAccessible() ;
+
+  String deniedAccessRoute() ;
+
+}
+
+abstract class OPContentSection extends UIContent implements OPSection {
   String _route ;
   String _name ;
   bool _hideFromMenu ;
   String _deniedAccessRoute ;
   FunctionTest _isAccessible ;
 
-  OPSection( { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible } ) : super( DivElement() ) {
+  OPContentSection( { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible , dynamic classes } ) : super( DivElement() , classes: classes ) {
+    this._route = route ;
+    this._name = name ?? route ;
+    this._hideFromMenu = hideFromMenu ?? false ;
+    this._deniedAccessRoute = deniedAccessRoute ;
+    this._isAccessible = isAccessible ;
+  }
+
+  String get route => _route;
+  bool get isCurrentRoute => UINavigator.currentRoute == route ;
+
+  String get name => _name ?? route ;
+
+  bool get hideFromMenu => _hideFromMenu;
+  bool get visibleInMenu => !_hideFromMenu;
+
+  @override
+  bool isAccessible() {
+    return _isAccessible != null ? _isAccessible() : true ;
+  }
+
+  @override
+  String deniedAccessRoute() {
+    return this._deniedAccessRoute ;
+  }
+
+}
+
+abstract class OPControlledSection extends UIControlledComponent implements OPSection {
+  String _route ;
+  String _name ;
+  bool _hideFromMenu ;
+  String _deniedAccessRoute ;
+  FunctionTest _isAccessible ;
+
+  OPControlledSection( dynamic loadingContent, dynamic errorContent, { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible , dynamic classes } ) : super( null , loadingContent, errorContent , classes: classes ) {
     this._route = route ;
     this._name = name ?? route ;
     this._hideFromMenu = hideFromMenu ?? false ;
@@ -135,6 +188,12 @@ abstract class OPSection extends UIContent {
   @override
   String deniedAccessRoute() {
     return this._deniedAccessRoute ;
+  }
+
+
+  @override
+  MapProperties getControllersProperties() {
+    return MapProperties.fromStringProperties( UINavigator.currentNavigation.parameters ) ;
   }
 
 }

@@ -1,3 +1,10 @@
+## 1.0.6
+
+- OPSection now is an interface.
+- OPControlledSection
+- bones_ui: ^1.0.5
+- swiss_knife: ^2.3.8
+
 ## 1.0.5
 
 - Better OPMenu behavior.

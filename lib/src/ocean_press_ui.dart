@@ -538,7 +538,7 @@ class OPMain extends UINavigableContent {
       component = OPOffline(content) ;
     }
     else {
-      component = OCEAN_PRESS_APP.getSection(route, content) ;
+      component = OCEAN_PRESS_APP.getSection(route, content) as UIComponent ;
       if (component != null) {
         component.clear();
       }
