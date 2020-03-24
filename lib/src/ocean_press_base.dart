@@ -5,8 +5,8 @@ import 'package:bones_ui/bones_ui.dart';
 import 'package:intl_messages/intl_messages.dart';
 import 'package:ocean_press/ocean_press.dart';
 
-IntlMessages OCEAN_PRESS_MESSAGES = IntlMessages.package("/ocean_press/")
-                        ..registerResourceDiscover(IntlResourceDiscover("package:ocean_press/i18n/ocean_press-msgs-",".intl")) ;
+IntlMessages OCEAN_PRESS_MESSAGES = IntlMessages.package('/ocean_press/')
+                        ..registerResourceDiscover(IntlResourceDiscover('package:ocean_press/i18n/ocean_press-msgs-','.intl')) ;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -55,6 +55,9 @@ class OPLoading extends UIComponent {
   OPLoading(Element parent, { String text, bool show = true, this.topMargin }) : _text = text , super(parent, inline: true) {
     if (!show) hide();
   }
+
+  @override
+  OPLoading clone() => OPLoading(null, text: text, topMargin: topMargin);
 
   String get text => _text != null ? _text : msgLoading.build() ;
 
@@ -154,6 +157,19 @@ abstract class OPContentSection extends UIContent implements OPSection {
   @override
   String deniedAccessRoute() {
     return this._deniedAccessRoute ;
+  }
+
+}
+
+class OPExplorerSection extends OPContentSection implements OPSection {
+
+  final dynamic explorerModel ;
+
+  OPExplorerSection( this.explorerModel, { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible , dynamic classes } ) : super( route: route , name: name , hideFromMenu: hideFromMenu, deniedAccessRoute: deniedAccessRoute, isAccessible: isAccessible, classes: classes ) ;
+
+  @override
+  dynamic renderContent() {
+    return UIExplorer(content, explorerModel);
   }
 
 }

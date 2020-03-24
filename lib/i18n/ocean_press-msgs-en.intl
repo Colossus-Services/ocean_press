@@ -1,6 +1,6 @@
 loading=Loading... ## Loading generic message
 
-welcomeLogin=Log in now: ## Login welcome message
+welcomeLogin=Welcome: ## Login welcome message
 loginOr=or ## 'or' word between login buttons: facebook or login
 
 buttonLogin=Log in ## Button login
@@ -49,4 +49,6 @@ savePassError=Error saving password! Check current password. ## Message for savi
 reallyWantToLogout=Do you really want to leave? ## Logout confirm message
 buttonLogout=Logout ## Logout button
 buttonBack=Back ## Back button
+
+copyrightAllRightsReserved=All Rights Reserved ## Common copyright message.
 

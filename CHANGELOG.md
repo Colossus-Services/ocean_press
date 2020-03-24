@@ -1,3 +1,20 @@
+## 1.0.7
+
+- OceanExpressApp.initialize( uiOutput , appBuilder )
+- OPRoot.appBuilder
+- OceanExpressApp.readyEvents
+- OceanExpressApp.messages
+- OceanExpressApp.loginFooter/loginBottomContent
+- buildCopyrightFooterMessage()
+- OPExplorerSection
+- Full translation of i18n: en,fr,pt
+- Fix OPMain home route overwrite.
+- swiss_knife: ^2.3.9
+- mercury_client: ^1.1.4
+- dynamic_call: ^1.0.7
+- intl_messages: ^1.1.6
+- social_login_web: ^1.0.2
+
 ## 1.0.6
 
 - OPSection now is an interface.

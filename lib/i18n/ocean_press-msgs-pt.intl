@@ -1,10 +1,53 @@
 loading=Carregando...
 
-welcomeLogin=Entre agora:
+welcomeLogin=Bem-vindo:
 loginOr=ou
 
 buttonLogin=Login
 loginUsername=Usuário
 loginPassword=Senha
 
+
+loadingLogin=Entrando... ## Loading when click in login button
+loginError=Erro no login ## Message for login error
+
+loadingFacebookLogin=Entrando in (via Facebook)... ## Loading when click in FB login button
+
+createAccount=Criar Conta ## link to create account
+
+buttonLoginWithFB=Login com Facebook ## Facebook login Button
+
+registerTitle=Registrar ## Register title
+registerName=Nome ## Register name
+registerEmail=E-mail ## Register e-mail
+registerUsername=Usuário ## Register username
+registerPassword=Senha ## Register password
+buttonRegister=Registrar ## Register button
+buttonDoLogin=Fazer Login ## Do log in button
+registerError=Erro registrando! Tente de novo... ## Message for register error
+
+
+profileTitle=PERFIL ## Profile title
+profileName=Nome ## Profile name
+profileEmail=E-mail ## Profile e-mail
+profileUsername=Usuário ## Profile username
+profileLanguage=Língua ## Profile language
+buttonChangePassword=Trocar Senha ## Change password button
+buttonMyItems=Meus Itens ## My items button
+buttonLogout=Sair ## Logout button
+
+
+changePassTitle=TROCAR SENHA ## Change password title
+currentPassword=Senha atual ## Current password field
+newPassword=Nova senha ## New password field
+confirmNewPassword=Confirmar nova senha ## Confirm new password field
+saveNewPassword=Salvar Nova Senha ## Save new password button
+savePassError=Erro salvando senha! Confira a senha atual informada. ## Message for saving password error
+
+
+reallyWantToLogout=Você deseja mesmo sair? ## Logout confirm message
+buttonLogout=Sair ## Logout button
+buttonBack=Voltar ## Back button
+
+copyrightAllRightsReserved=Todos os Direitos Reservados
 

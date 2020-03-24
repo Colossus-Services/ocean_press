@@ -1,10 +1,52 @@
-loading=Chargement en cours
+loading=Chargement...
 
-welcomeLogin=Entrez maintenant:
+welcomeLogin=Bienvenue:
 loginOr=ou
 
 buttonLogin=S'identifier
 loginUsername=Nom d'utilisateur
 loginPassword=Mot de passe
 
+loadingLogin=chargement ## Loading when click in login button
+loginError=Erreur de conexion ## Message for login error
+
+loadingFacebookLogin=Entrer (via Facebook)... ## Loading when click in FB login button
+
+createAccount=Créer un Compte ## link to create account
+
+buttonLoginWithFB=Connectez-vous Via Facebook ## Facebook login Button
+
+registerTitle=S'inscrire ## Register title
+registerName=Nom ## Register name
+registerEmail=E-mail ## Register e-mail
+registerUsername=Nom d'utilisateur ## Register username
+registerPassword=Mot de passe ## Register password
+buttonRegister=Enregistrer ## Register button
+buttonDoLogin=Se connecter ## Do log in button
+registerError=Erreur En train d'enregistrement! Réessaye... ## Message for register error
+
+
+profileTitle=PROFIL ## Profile title
+profileName=Nom ## Profile name
+profileEmail=E-mail ## Profile e-mail
+profileUsername=Identifiant ## Profile username
+profileLanguage=Langue ## Profile language
+buttonChangePassword=Changer le Mot de Passe ## Change password button
+buttonMyItems=Mes articles ## My items button
+buttonLogout=Se Déconnecter ## Logout button
+
+
+changePassTitle=CHANGER LE MOT DE PASSE ## Change password title
+currentPassword=Mot de passe actuel ## Current password field
+newPassword=Nouveau mot de passe## New password field
+confirmNewPassword=Confirmer le nouveau mot de passe ## Confirm new password field
+saveNewPassword=Enregistrer le nouveau mot de passe ## Save new password button
+savePassError=Erreur En train d'enregistrement! Vérifier le nouveau mot de passe. ## Message for saving password error
+
+
+reallyWantToLogout=Voulez-vous déconnecter? ## Logout confirm message
+buttonLogout=Se Déconnecter ## Logout button
+buttonBack=Retourner ## Back button
+
+copyrightAllRightsReserved=Tous Droits Réservés
 

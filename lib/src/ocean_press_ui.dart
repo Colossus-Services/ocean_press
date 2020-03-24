@@ -15,7 +15,17 @@ int UI_MAIN_CONTENT_TOP_MARGIN = 80 ;
 ////////////////////////////////////////////////////////////////////////////////
 
 class OPRoot extends UIRoot implements GlobalUserListener {
-  OPRoot(Element container) : super(container, classes: 'ui-root');
+
+  final OceanExpressAppBuilder appBuilder ;
+
+  OPRoot(Element container, this.appBuilder) : super(container, classes: 'ui-root');
+
+  @override
+  void onInitialized() {
+    if (appBuilder != null) {
+      appBuilder(OCEAN_PRESS_APP);
+    }
+  }
 
   @override
   Future<bool> initializeLocale(String locale) {
@@ -23,8 +33,33 @@ class OPRoot extends UIRoot implements GlobalUserListener {
   }
 
   @override
-  Future<bool> isReady() {
-    return OCEAN_PRESS_APP.loginState.onLoad.listenAsFuture() ;
+  Future<bool> onPrefDefineLocale(String locale) async {
+    if ( OCEAN_PRESS_APP.messages.isEmpty ) {
+      return true ;
+    }
+
+    var list = OCEAN_PRESS_APP.messages.where( (e) => e != null ).map( (e) => e.autoDiscoverLocale(locale) ).toList() ;
+
+    await Future.wait( list ) ;
+    return true ;
+  }
+
+  @override
+  Future<bool> isReady() async {
+    var storageReadyFuture = OCEAN_PRESS_APP.loginState.onLoad.listenAsFuture();
+    Future<List<bool>> eventsReadyFuture = Future.wait( OCEAN_PRESS_APP.readyEvents ) ;
+    Future<List<bool>> messagesDiscoveredFuture = Future.wait( OCEAN_PRESS_APP.messages.map( (m) => m.autoDiscover() ) ) ;
+
+    var storageReady = await storageReadyFuture ;
+    if (!storageReady) return false ;
+
+    List<bool> eventsReady = await eventsReadyFuture ;
+    if ( eventsReady.isNotEmpty && !isAllEqualsInList(eventsReady, true) ) return false ;
+
+    List<bool> messagesDiscovered = await messagesDiscoveredFuture ;
+    if ( messagesDiscovered.isNotEmpty && !isAllEqualsInList(messagesDiscovered, true) ) return false ;
+
+    return true ;
   }
 
   @override
@@ -112,6 +147,26 @@ class OPRoot extends UIRoot implements GlobalUserListener {
   @override
   UIComponent renderMenu() {
     return OPMenu(content) ;
+  }
+
+  @override
+  void buildAppStatusBar() {
+    if ( !isMobileAppStatusBarTranslucent() ) return ;
+
+    var statusDiv = DivElement()
+      ..classes.add('ui-app-status-bar')
+    ;
+
+    statusDiv.style
+      ..position = 'fixed'
+      ..left = '0px'
+      ..top = '-200px'
+      ..width = '100%'
+      ..height = '200px'
+      ..zIndex = '99999'
+    ;
+
+    document.body.children.add(statusDiv) ;
   }
 
 }
@@ -515,7 +570,13 @@ class OPMain extends UINavigableContent {
 
     UIComponent component ;
 
-    if (route == "home") {
+    var sectionComponent = OCEAN_PRESS_APP.getSection(route, content) as UIComponent ;
+
+    if (sectionComponent != null) {
+      sectionComponent.clear();
+      component = sectionComponent ;
+    }
+    else if (route == "home") {
       component = OPHome(content) ;
     }
     else if (route == "login") {
@@ -536,12 +597,6 @@ class OPMain extends UINavigableContent {
     }
     else if (route == "offline") {
       component = OPOffline(content) ;
-    }
-    else {
-      component = OCEAN_PRESS_APP.getSection(route, content) as UIComponent ;
-      if (component != null) {
-        component.clear();
-      }
     }
 
     content.classes.add("ui-main-bg$bg") ;
@@ -576,32 +631,44 @@ class OPHomeLogin extends UIContent {
 
   @override
   renderContent() {
-    var login = SSLogin(content) ;
+    var login = OPLogin(content) ;
 
     var footDiv = DivElement();
     footDiv.classes.add('ui-login-footer');
     footDiv.innerHtml = '&nbsp;';
+
+    var loginFooter = OCEAN_PRESS_APP.loginFooter ;
+
+    if ( loginFooter != null ) {
+      footDiv.children.clear();
+      loginFooter.setParent(footDiv) ;
+    }
 
     return [login, footDiv] ;
   }
 
 }
 
-class SSLogin extends UIContent {
-  SSLogin(Element parent) : super(parent, classes: 'ui-login');
+class OPLogin extends UIContent {
+  OPLogin(Element parent) : super(parent, classes: 'ui-login');
 
   @override
   renderContent() {
     String html = isSmallScreen() ? '' : '<p>' ;
 
-    var loginContent = SSLoginContent(content) ;
-    return [html,loginContent] ;
+    var loginContent = OPLoginContent(content) ;
+
+    var loginBottomContent = OCEAN_PRESS_APP.loginBottomContent ;
+
+    var separator = loginBottomContent != null ? '<p>&nbsp;<p>' : null ;
+
+    return [html,loginContent, separator, loginBottomContent] ;
   }
 
 }
 
-class SSLoginContent extends UIContent implements GlobalUserListener {
-  SSLoginContent(Element parent) : super(parent, classes: 'ui-content');
+class OPLoginContent extends UIContent implements GlobalUserListener {
+  OPLoginContent(Element parent) : super(parent, classes: 'ui-content');
 
   @override
   void configure() {
@@ -626,7 +693,7 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
     <p>
     """ ;
 
-    var buttonFacebook = SSButtonFB(content)
+    var buttonFacebook = OPButtonFB(content)
       ..id = 'buttonFB'
       ..onClick.listen(_onClickFBLogin)
     ;
@@ -769,11 +836,11 @@ class SSLoginContent extends UIContent implements GlobalUserListener {
 
 }
 
-class SSButtonFB extends OPButton {
+class OPButtonFB extends OPButton {
 
   static String get messageButtonLoginWithFB => OCEAN_PRESS_MESSAGES.msg("buttonLoginWithFB").build() ;
 
-  SSButtonFB(Element parent) : super(parent, messageButtonLoginWithFB, classes: ['ui-button-fb' , '!ui-button', '!ui-button-small'] );
+  OPButtonFB(Element parent) : super(parent, messageButtonLoginWithFB, classes: ['ui-button-fb' , '!ui-button', '!ui-button-small'] );
 
 }
 

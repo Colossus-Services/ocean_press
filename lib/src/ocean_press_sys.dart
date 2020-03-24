@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:bones_ui/bones_ui.dart';
 import 'package:dynamic_call/dynamic_call.dart';
+import 'package:intl_messages/intl_messages.dart';
 import 'ocean_press_base.dart';
 import 'package:social_login_web/facebook_login.dart';
 
@@ -10,7 +11,7 @@ import 'ocean_press_ui.dart';
 
 ////////////////////////////////////////////////////////////////////////////////
 
-OceanExpressApp OCEAN_PRESS_APP = OceanExpressApp() ;
+final OceanExpressApp OCEAN_PRESS_APP = OceanExpressApp() ;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +28,8 @@ class LoginState extends State {
   }
 
 }
+
+typedef OceanExpressAppBuilder = void Function( OceanExpressApp app ) ;
 
 class OceanExpressApp {
 
@@ -64,16 +67,16 @@ class OceanExpressApp {
     throw ArgumentError("Can't resolve Element with parameter of type: ${ element.runtimeType }") ;
   }
 
-  void initialize([dynamic uiOutput]) {
+  void initialize( { dynamic uiOutput , OceanExpressAppBuilder appBuilder } ) {
     Element outputElem = resolveElement(uiOutput) ;
-    _initializeImpl(outputElem) ;
+    _initializeImpl( uiOutput: outputElem, appBuilder: appBuilder ) ;
   }
 
   bool get initialized => _initializedStorage && _initializedUI ;
 
-  void _initializeImpl([Element uiOutput]) {
+  void _initializeImpl( { Element uiOutput , OceanExpressAppBuilder appBuilder } ) {
     _initializeStorage();
-    _initializeUI(uiOutput);
+    _initializeUI(uiOutput, appBuilder);
   }
 
   ///////////////////////////////////////////////////////////////////
@@ -95,17 +98,17 @@ class OceanExpressApp {
 
   bool _initializedUI = false ;
 
-  void _initializeUI(Element uiOutput) {
+  void _initializeUI(Element uiOutput, OceanExpressAppBuilder appBuilder) {
     if (uiOutput == null) return ;
 
     if (_initializedUI) return;
     _initializedUI = true;
 
-    _initializeUIImpl(uiOutput) ;
+    _initializeUIImpl(uiOutput, appBuilder) ;
   }
 
-  void _initializeUIImpl(Element uiOutput) {
-    var root = OPRoot(uiOutput);
+  void _initializeUIImpl(Element uiOutput, OceanExpressAppBuilder appBuilder) {
+    var root = OPRoot(uiOutput, appBuilder);
     root.initialize();
   }
 
@@ -153,7 +156,9 @@ class OceanExpressApp {
     _initializeImpl();
 
     OCEAN_PRESS_MESSAGES.onRegisterLocalizedMessages.listen(_onRegisterLocalizedMessages, singletonIdentifier: this) ;
-    
+
+    messages.where( (e) => e != null ).forEach( (e) => e.autoDiscoverLocale(locale) ) ;
+
     return OCEAN_PRESS_MESSAGES.autoDiscoverLocale(locale) ;
   }
   
@@ -162,6 +167,10 @@ class OceanExpressApp {
       UIRoot.getInstance().refresh();
     }
   }
+
+  final Set< Future<bool> > readyEvents = {} ;
+
+  final Set< IntlMessages > messages = {} ;
 
   void initFacebookLogin() {
     if ( !hasFacebookID ) return ;
@@ -192,7 +201,6 @@ class OceanExpressApp {
   }
 
   bool _canChangePassword = true ;
-
 
   bool get canChangePassword => _canChangePassword;
 
@@ -257,6 +265,14 @@ class OceanExpressApp {
   String getWSURL() {
     return _system.getWSBaseURL() ;
   }
+
+  UIComponent _loginFooter ;
+  UIComponent get loginFooter => _loginFooter;
+  set loginFooter(UIComponent value) => _loginFooter = value;
+
+  UIComponent _loginBottomContent ;
+  UIComponent get loginBottomContent => _loginBottomContent;
+  set loginBottomContent(UIComponent value) => _loginBottomContent = value;
 
 }
 
@@ -430,3 +446,20 @@ typedef void ProcessLoginFunction(UserLogin user) ;
 typedef void ProcessRegisterFunction(UserLogin user) ;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+String buildCopyrightFooterMessage( String copyrightHolder , { String holderURL , int initialYear } ) {
+  var copyrightAllRightsReserved = OCEAN_PRESS_MESSAGES.msg('copyrightAllRightsReserved').build() ;
+
+  var year = DateTime.now().year ;
+  initialYear ??= year ;
+
+  var yearStr = year > initialYear ? '$initialYear-$year' : '$year' ;
+
+  if (holderURL != null) {
+    return 'Copyright © $yearStr <a href="$holderURL" target="_blank">$copyrightHolder</a> - $copyrightAllRightsReserved' ;
+  }
+  else {
+    return 'Copyright © $yearStr $copyrightHolder - $copyrightAllRightsReserved' ;
+  }
+}
+
