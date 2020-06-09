@@ -252,8 +252,9 @@ class OceanExpressApp {
 
   void registerSection(OPSection section, [bool home]) {
     var route = section.route;
-    if (route == null)
+    if (route == null) {
       throw ArgumentError("Section route can't be null: $section");
+    }
 
     sections[route] = section;
 

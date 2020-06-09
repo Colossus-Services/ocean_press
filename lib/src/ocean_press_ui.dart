@@ -62,8 +62,9 @@ class OPRoot extends UIRoot implements GlobalUserListener {
     if (!storageReady) return false;
 
     var eventsReady = await eventsReadyFuture;
-    if (eventsReady.isNotEmpty && !isAllEqualsInList(eventsReady, true))
+    if (eventsReady.isNotEmpty && !isAllEqualsInList(eventsReady, true)) {
       return false;
+    }
 
     var messagesDiscovered = await messagesDiscoveredFuture;
     if (messagesDiscovered.isNotEmpty &&
@@ -618,8 +619,9 @@ class OPLoginContent extends UIContent implements GlobalUserListener {
 
     var username = OCEAN_PRESS_APP.loginState.getUsername();
 
-    if (username != null && RegExp('^FB\\d+\$').hasMatch(username))
+    if (username != null && RegExp('^FB\\d+\$').hasMatch(username)) {
       username = null;
+    }
 
     var inputTable = UIInputTable(content, [
       InputConfig('username', messageLoginUsername,
