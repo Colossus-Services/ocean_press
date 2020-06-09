@@ -1,37 +1,94 @@
-
 import 'dart:html';
 
 import 'package:bones_ui/bones_ui.dart';
 import 'package:intl_messages/intl_messages.dart';
-import 'package:ocean_press/ocean_press.dart';
 
 IntlMessages OCEAN_PRESS_MESSAGES = IntlMessages.package('/ocean_press/')
-                        ..registerResourceDiscover(IntlResourceDiscover('package:ocean_press/i18n/ocean_press-msgs-','.intl')) ;
+  ..registerResourceDiscover(IntlResourceDiscover(
+      'package:ocean_press/i18n/ocean_press-msgs-', '.intl'));
 
-////////////////////////////////////////////////////////////////////////////////
-
+/// Ocean Press Button.
 class OPButton extends UIButton {
-  final String text ;
-  final String fontSize ;
+  final String text;
 
-  OPButton(Element parent, this.text, {String navigate, Map<String,String> navigateParameters, Map<String,String> navigateParametersProvider(), dynamic classes, bool small = false, this.fontSize}) : super(parent, navigate: navigate, navigateParameters: navigateParameters, navigateParametersProvider: navigateParametersProvider, classes: classes) {
-    configureClasses( classes , [ small ? 'ui-button-small' : 'ui-button' ] ) ;
+  final String fontSize;
+
+  OPButton(Element parent, this.text,
+      {String navigate,
+      Map<String, String> navigateParameters,
+      Map<String, String> Function() navigateParametersProvider,
+      dynamic classes,
+      bool small = false,
+      this.fontSize})
+      : super(parent,
+            navigate: navigate,
+            navigateParameters: navigateParameters,
+            navigateParametersProvider: navigateParametersProvider,
+            classes: classes) {
+    configureClasses(classes, [
+      small ? 'btn btn-secondary ui-button-small' : 'btn btn-primary ui-button'
+    ]);
   }
 
   @override
   String renderButton() {
     if (disabled) {
-      content.style.opacity = '0.7' ;
-    }
-    else {
-      content.style.opacity = null ;
+      content.style.opacity = '0.7';
+    } else {
+      content.style.opacity = null;
     }
 
     if (fontSize != null) {
-      return "<span style='font-size: $fontSize'>$text</span>" ;
+      return "<span style='font-size: $fontSize'>$text</span>";
+    } else {
+      return text;
     }
-    else {
-      return text ;
+  }
+
+  void setWideButton() {
+    content.style.width = '80%';
+    content.style.maxWidth = '400px';
+  }
+
+  void setNormalButton() {
+    content.style.width = null;
+    content.style.maxWidth = null;
+  }
+}
+
+/// Ocean Press Button to Capture an Photo.
+class OPButtonCapturePhoto extends UICapture {
+  final String text;
+
+  final String fontSize;
+
+  OPButtonCapturePhoto(Element parent, this.text,
+      {String navigate,
+      Map<String, String> navigateParameters,
+      Map<String, String> Function() navigateParametersProvider,
+      dynamic classes,
+      bool small = false,
+      this.fontSize})
+      : super(parent, CaptureType.PHOTO,
+            navigate: navigate,
+            navigateParameters: navigateParameters,
+            navigateParametersProvider: navigateParametersProvider,
+            classes: classes) {
+    configureClasses(classes, [small ? 'ui-button-small' : 'ui-button']);
+  }
+
+  @override
+  String renderButton() {
+    if (disabled) {
+      content.style.opacity = '0.7';
+    } else {
+      content.style.opacity = null;
+    }
+
+    if (fontSize != null) {
+      return "<span style='font-size: $fontSize'>$text</span>";
+    } else {
+      return text;
     }
   }
 
@@ -40,184 +97,302 @@ class OPButton extends UIButton {
   }
 
   void setNormalButton() {
-    content.style.width = null ;
+    content.style.width = null;
   }
-
 }
 
+/// Ocean Press Loading element.
 class OPLoading extends UIComponent {
+  MessageBuilder msgLoading = OCEAN_PRESS_MESSAGES.msg('loading');
 
-  MessageBuilder msgLoading = OCEAN_PRESS_MESSAGES.msg("loading") ;
+  String _text;
 
-  String _text ;
-  int topMargin ;
+  int topMargin;
 
-  OPLoading(Element parent, { String text, bool show = true, this.topMargin }) : _text = text , super(parent, inline: true) {
+  OPLoading(Element parent, {String text, bool show = true, this.topMargin})
+      : _text = text,
+        super(parent, inline: true) {
     if (!show) hide();
   }
 
   @override
   OPLoading clone() => OPLoading(null, text: text, topMargin: topMargin);
 
-  String get text => _text != null ? _text : msgLoading.build() ;
+  String get text => _text ?? msgLoading.build();
 
-  SpanElement _loadingText ;
+  SpanElement _loadingText;
 
   @override
   dynamic render() {
-
     content.style.verticalAlign = 'middle';
 
     var divTopMargin = '';
     if (topMargin != null && topMargin > 0) {
-      divTopMargin = "<div style='display: inline-block; margin: ${topMargin}px 0 0 0'></div>" ;
+      divTopMargin =
+          "<div style='display: inline-block; margin: ${topMargin}px 0 0 0'></div>";
     }
 
-    String html ;
+    String html;
 
-    if ( hasText ) {
+    if (hasText) {
       html = """
       $divTopMargin
-      <div style='display: inline-block; text-align: center;'><div class='ui-loader' style='display: inline-block;'></div><br/><span id='_loadingText' class='ui-loader-text' style='display: inline-block; text-align: center;'>$text</span></div>
+      <div style='display: inline-block; text-align: center;'><div class='spinner-border m-1 ui-loader' style='display: inline-block;'></div><br/><span id='_loadingText' class='ui-loader-text' style='display: inline-block; text-align: center;'>$text</span></div>
       """;
-    }
-    else {
+    } else {
       html = """
       $divTopMargin
-      <div style='display: inline-block; text-align: center;'><div class='ui-loader' style='display: inline-block;'></div></div>
+      <div style='display: inline-block; text-align: center;'><div class='spinner-border m-1 ui-loader' style='display: inline-block;'></div></div>
       """;
     }
 
     return html;
   }
 
-  bool get hasText => _text != null && _text.isNotEmpty ;
+  bool get hasText => _text != null && _text.isNotEmpty;
 
+  @override
   void posRender() {
-    this._loadingText = content.querySelector("#_loadingText") ;
+    _loadingText = content.querySelector('#_loadingText');
   }
 
   void setLoadingText(String text) {
-    _loadingText.text = _text = text ;
+    _loadingText.text = _text = text;
   }
 
   String getLoadingText() {
-    return text ;
+    return text;
   }
-
 }
 
+typedef NameProvider = String Function();
 
+/// Ocean Section.
 abstract class OPSection {
+  void setParent(Element parent);
 
-  setParent(Element parent) ;
+  /// Route of the section.
+  String get route;
 
-  String get route ;
-  bool get isCurrentRoute ;
+  /// Returns [true] if the route of this section is the current route.
+  bool get isCurrentRoute;
 
-  String get name ;
+  /// Returns the name of the section.
+  String get name;
 
-  bool get hideFromMenu ;
-  bool get visibleInMenu ;
+  /// Returns the current title of the section.
+  String get currentTitle => name;
 
-  bool isAccessible() ;
+  /// If [true] will hide this section from the menu.
+  bool get hideFromMenu;
 
-  String deniedAccessRoute() ;
+  /// If [true] will be visible in the menu.
+  bool get visibleInMenu;
 
-}
+  /// If returns [true] this sections is accessible in the current context.
+  ///
+  /// Useful to block sections that requires login.
+  bool isAccessible();
 
-abstract class OPContentSection extends UIContent implements OPSection {
-  String _route ;
-  String _name ;
-  bool _hideFromMenu ;
-  String _deniedAccessRoute ;
-  FunctionTest _isAccessible ;
+  /// Route to forward when access is denied.
+  String deniedAccessRoute();
 
-  OPContentSection( { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible , dynamic classes } ) : super( DivElement() , classes: classes ) {
-    this._route = route ;
-    this._name = name ?? route ;
-    this._hideFromMenu = hideFromMenu ?? false ;
-    this._deniedAccessRoute = deniedAccessRoute ;
-    this._isAccessible = isAccessible ;
+  /// Resolve a dynamic [name]: can be a [Function] or a [String].
+  String resolveName(dynamic name) {
+    return resolveDynamicName(name, route);
   }
 
+  /// Static function to resolve a dynamic [name].
+  ///
+  /// [def] The default name if [name] is invalid.
+  static String resolveDynamicName(dynamic name, [String def]) {
+    if (name == null) return def;
+
+    if (name is String) {
+      return name;
+    } else if (name is NameProvider) {
+      try {
+        var n = name();
+        if (n != null) {
+          return n;
+        } else {
+          return def;
+        }
+      } catch (e, s) {
+        print(e);
+        print(s);
+      }
+    }
+
+    return '$name';
+  }
+}
+
+/// Ocean Press Section based in [UIContent].
+abstract class OPContentSection extends UIContent implements OPSection {
+  String _route;
+
+  dynamic _name;
+
+  bool _hideFromMenu;
+
+  String _deniedAccessRoute;
+
+  FunctionTest _isAccessible;
+
+  OPContentSection(
+      {String route,
+      dynamic name,
+      bool hideFromMenu,
+      String deniedAccessRoute,
+      FunctionTest isAccessible,
+      dynamic classes})
+      : super(DivElement(), classes: classes, renderOnConstruction: false) {
+    _route = route;
+    _name = name ?? route;
+    _hideFromMenu = hideFromMenu ?? false;
+    _deniedAccessRoute = deniedAccessRoute;
+    _isAccessible = isAccessible;
+  }
+
+  @override
   String get route => _route;
-  bool get isCurrentRoute => UINavigator.currentRoute == route ;
 
-  String get name => _name ?? route ;
+  @override
+  bool get isCurrentRoute => UINavigator.currentRoute == route;
 
+  @override
+  String get name {
+    if (_name == null) return route;
+
+    if (_name is String) return _name;
+
+    String name;
+    if (_name is Function) {
+      name = _name();
+    }
+
+    return name ?? route;
+  }
+
+  @override
   bool get hideFromMenu => _hideFromMenu;
+
+  @override
   bool get visibleInMenu => !_hideFromMenu;
 
   @override
   bool isAccessible() {
-    return _isAccessible != null ? _isAccessible() : true ;
+    return _isAccessible != null ? _isAccessible() : true;
   }
 
   @override
   String deniedAccessRoute() {
-    return this._deniedAccessRoute ;
+    return _deniedAccessRoute;
   }
 
+  @override
+  String get currentTitle => name;
+
+  @override
+  String resolveName(dynamic name) {
+    return OPSection.resolveDynamicName(name, route);
+  }
 }
 
+/// Ocean Press Section based in [UIExplorer].
 class OPExplorerSection extends OPContentSection implements OPSection {
+  final dynamic explorerModel;
 
-  final dynamic explorerModel ;
-
-  OPExplorerSection( this.explorerModel, { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible , dynamic classes } ) : super( route: route , name: name , hideFromMenu: hideFromMenu, deniedAccessRoute: deniedAccessRoute, isAccessible: isAccessible, classes: classes ) ;
+  OPExplorerSection(this.explorerModel,
+      {String route,
+      dynamic name,
+      bool hideFromMenu,
+      String deniedAccessRoute,
+      FunctionTest isAccessible,
+      dynamic classes})
+      : super(
+            route: route,
+            name: name,
+            hideFromMenu: hideFromMenu,
+            deniedAccessRoute: deniedAccessRoute,
+            isAccessible: isAccessible,
+            classes: ['text-left', ...?classes]);
 
   @override
   dynamic renderContent() {
     return UIExplorer(content, explorerModel);
   }
 
+  @override
+  String get currentTitle => name;
+
+  @override
+  String resolveName(name) {
+    return OPSection.resolveDynamicName(name, route);
+  }
 }
 
-abstract class OPControlledSection extends UIControlledComponent implements OPSection {
-  String _route ;
-  String _name ;
-  bool _hideFromMenu ;
-  String _deniedAccessRoute ;
-  FunctionTest _isAccessible ;
+/// Ocean Press Section based in [UIControlledComponent].
+abstract class OPControlledSection extends UIControlledComponent
+    implements OPSection {
+  String _route;
 
-  OPControlledSection( dynamic loadingContent, dynamic errorContent, { String route, String name , bool hideFromMenu, String deniedAccessRoute , FunctionTest isAccessible , dynamic classes } ) : super( null , loadingContent, errorContent , classes: classes ) {
-    this._route = route ;
-    this._name = name ?? route ;
-    this._hideFromMenu = hideFromMenu ?? false ;
-    this._deniedAccessRoute = deniedAccessRoute ;
-    this._isAccessible = isAccessible ;
+  dynamic _name;
+
+  bool _hideFromMenu;
+
+  String _deniedAccessRoute;
+
+  FunctionTest _isAccessible;
+
+  OPControlledSection(dynamic loadingContent, dynamic errorContent,
+      {String route,
+      dynamic name,
+      bool hideFromMenu,
+      String deniedAccessRoute,
+      FunctionTest isAccessible,
+      ControllerPropertiesType controllersPropertiesType,
+      dynamic classes})
+      : super(null, loadingContent, errorContent,
+            controllersPropertiesType: controllersPropertiesType,
+            classes: classes) {
+    _route = route;
+    _name = name ?? route;
+    _hideFromMenu = hideFromMenu ?? false;
+    _deniedAccessRoute = deniedAccessRoute;
+    _isAccessible = isAccessible;
   }
 
+  @override
   String get route => _route;
-  bool get isCurrentRoute => UINavigator.currentRoute == route ;
 
-  String get name => _name ?? route ;
+  @override
+  bool get isCurrentRoute => UINavigator.currentRoute == route;
 
+  @override
+  String get name => resolveName(_name);
+
+  @override
+  String get currentTitle => name;
+
+  @override
   bool get hideFromMenu => _hideFromMenu;
+
+  @override
   bool get visibleInMenu => !_hideFromMenu;
 
   @override
   bool isAccessible() {
-    return _isAccessible != null ? _isAccessible() : true ;
+    return _isAccessible != null ? _isAccessible() : true;
   }
+
   @override
   String deniedAccessRoute() {
-    return this._deniedAccessRoute ;
+    return _deniedAccessRoute;
   }
-
-
-  @override
-  MapProperties getControllersProperties() {
-    return MapProperties.fromStringProperties( UINavigator.currentNavigation.parameters ) ;
-  }
-
 }
-
-/////////////////////////////////////////////////////////////////////////////////////
 
 bool isSmallScreen() {
-  return window.innerWidth <= 600 ;
+  return window.innerWidth <= 600;
 }
-
-///////////

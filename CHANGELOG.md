@@ -1,3 +1,15 @@
+## 1.0.8
+
+- Add API Documentation.
+- dartfmt.
+- bones_ui: ^1.0.11
+- bones_ui_bootstrap: ^1.0.1
+- swiss_knife: ^2.5.2
+- mercury_client: ^1.1.7
+- dynamic_call: ^1.0.9
+- intl_messages: ^1.1.8
+- pedantic: ^1.9.0
+
 ## 1.0.7
 
 - OceanExpressApp.initialize( uiOutput , appBuilder )

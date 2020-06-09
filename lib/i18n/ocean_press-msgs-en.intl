@@ -12,6 +12,8 @@ loginError=Login error ## Message for login error
 
 loadingFacebookLogin=logging in (Facebook)... ## Loading when click in FB login button
 
+home=Home
+
 createAccount=Create Account ## link to create account
 
 buttonLoginWithFB=Login with Facebook ## Facebook login Button

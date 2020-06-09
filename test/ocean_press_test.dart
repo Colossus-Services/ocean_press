@@ -1,18 +1,11 @@
-import 'package:ocean_press/ocean_press.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('A group of tests', () {
-    //Awesome awesome;
+  group('Basic tests', () {
+    setUp(() {});
 
-    setUp(() {
-      //awesome = Awesome();
-    });
-
-    test('First Test', () {
-
+    test('Test 1', () {
       //expect(awesome.isAwesome, isTrue);
-
     });
   });
 }

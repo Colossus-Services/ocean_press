@@ -13,6 +13,8 @@ loginError=Erro no login ## Message for login error
 
 loadingFacebookLogin=Entrando in (via Facebook)... ## Loading when click in FB login button
 
+home=Início
+
 createAccount=Criar Conta ## link to create account
 
 buttonLoginWithFB=Login com Facebook ## Facebook login Button

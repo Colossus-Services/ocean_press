@@ -1,8 +1,7 @@
-
 class Intl {
   static message(String s, {String name, List args, String desc}) {
-    String key = name.replaceFirst('message', '') ;
-    key = key.substring(0,1).toLowerCase() + key.substring(1) ;
+    String key = name.replaceFirst('message', '');
+    key = key.substring(0, 1).toLowerCase() + key.substring(1);
 
     //print("$key=$s ## $desc") ;
 
@@ -10,11 +9,9 @@ class Intl {
 
     print("String get $name => MESSAGES.msg(\"$key\").build() ;");
   }
-  
 }
 
 class Foo {
-
 /*
   String get messageLoginUsername => Intl.message(
       "Username",
@@ -59,7 +56,6 @@ class Foo {
       args: [],
       desc: "Facebook login button");
 */
-
 
 /*
   String get messageRegisterTitle => Intl.message(
@@ -205,32 +201,21 @@ class Foo {
 
  */
 
+  static String get messageRealyWantToLogout =>
+      Intl.message("Do you really want to leave?",
+          name: "messageReallyWantToLogout",
+          args: [],
+          desc: "Logout confirm message");
 
-  static String get messageRealyWantToLogout => Intl.message(
-      "Do you really want to leave?",
-      name: "messageReallyWantToLogout",
-      args: [],
-      desc: "Logout confirm message");
+  static String get messageButtonLogout => Intl.message("Logout",
+      name: "messageButtonLogout", args: [], desc: "Logout button");
 
-  static String get messageButtonLogout => Intl.message(
-      "Logout",
-      name: "messageButtonLogout",
-      args: [],
-      desc: "Logout button");
-
-  static String get messageButtonBack => Intl.message(
-      "Back",
-      name: "messageButtonBack",
-      args: [],
-      desc: "Back button");
-
-
+  static String get messageButtonBack => Intl.message("Back",
+      name: "messageButtonBack", args: [], desc: "Back button");
 }
 
-
 void main() {
-
-  Foo o = Foo() ;
+  Foo o = Foo();
 
   /*
   o.messageLoginUsername;
@@ -277,8 +262,7 @@ void main() {
 
    */
 
-  Foo.messageRealyWantToLogout ;
-  Foo.messageButtonLogout ;
-  Foo.messageButtonBack ;
-
+  Foo.messageRealyWantToLogout;
+  Foo.messageButtonLogout;
+  Foo.messageButtonBack;
 }
