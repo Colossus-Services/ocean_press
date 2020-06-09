@@ -44,10 +44,10 @@ Graciliano M. Passos: [gmpassos@GitHub][gmpassos_github].
 
 ## License
 
-[Apache License - Version 2.0][apache_license]
+[Artistic License - Version 2.0][artistic_license]
 
 
 [gmpassos_github]: https://github.com/gmpassos
 [colossus]: https://colossus.services/
-[apache_license]: https://www.apache.org/licenses/LICENSE-2.0.txt
+[artistic_license]: https://github.com/Colossus-Services/ocean_press/blob/master/LICENSE
 
