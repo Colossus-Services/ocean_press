@@ -1,3 +1,10 @@
+## 1.0.9
+
+- bones_ui: ^1.0.12
+- bones_ui_bootstrap: ^1.0.3
+- enum_to_string: ^1.0.9
+- markdown: ^2.1.4
+
 ## 1.0.8
 
 - Add API Documentation.
