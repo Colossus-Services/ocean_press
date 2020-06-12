@@ -1,3 +1,11 @@
+## 1.0.10
+
+- AccessTokeState: for login resume.
+- swiss_knife: ^2.5.3
+- mercury_client: ^1.1.8
+- dynamic_call: ^1.0.10
+- dartfmt
+
 ## 1.0.9
 
 - bones_ui: ^1.0.12

@@ -24,6 +24,19 @@ class LoginState extends State {
   }
 }
 
+/// [State] for access tokens. Used for login refresh.
+class AccessTokeState extends State {
+  AccessTokeState(DataStorage storage) : super(storage, 'access_token');
+
+  String getToken() {
+    return get('token');
+  }
+
+  void setToken(String username) {
+    set('token', username);
+  }
+}
+
 typedef OceanExpressAppBuilder = void Function(OceanExpressApp app);
 
 /// The Ocean Press Application.
@@ -122,15 +135,18 @@ class OceanExpressApp {
     root.initialize();
   }
 
-  ///////////////////////////////////////////////////////////////////
-
   DataStorage _dataStorage;
+  DataStorage _sessionDataStorage;
 
   DataStorage get dataStorage => _dataStorage;
 
   LoginState _loginState;
 
   LoginState get loginState => _loginState;
+
+  AccessTokeState _accessTokeState;
+
+  AccessTokeState get accessTokeState => _accessTokeState;
 
   bool _initializedStorage = false;
 
@@ -139,10 +155,11 @@ class OceanExpressApp {
     _initializedStorage = true;
 
     _dataStorage = DataStorage(_id, DataStorageType.PERSISTENT);
-    _loginState = LoginState(_dataStorage);
-  }
+    _sessionDataStorage = DataStorage(_id, DataStorageType.SESSION);
 
-  ///////////////////////////////////////////////////////////////////
+    _loginState = LoginState(_dataStorage);
+    _accessTokeState = AccessTokeState(_sessionDataStorage);
+  }
 
   OceanAppSystem _system;
 
@@ -297,11 +314,20 @@ class OceanExpressApp {
 
     var restClient = DynCallHttpClient(getWSURL())
       ..crossSiteWithCredentials = true
-      ..autoChangeAuthorizationToBearerToken('X-Access-Token');
+      ..autoChangeAuthorizationToBearerToken('X-Access-Token')
+      ..authorizationResolutionInterceptor = _onResolvedAuthorization;
 
     _restClient = restClient;
 
     return restClient;
+  }
+
+  void _onResolvedAuthorization(Authorization authorization) {
+    var credential = authorization.tryResolvedCredential;
+    if (credential != null && credential is BearerCredential) {
+      var token = credential.token;
+      accessTokeState.setToken(token);
+    }
   }
 
   String getWSURL() {
