@@ -1,3 +1,11 @@
+## 1.0.11
+
+- bones_ui: ^1.0.13
+- bones_ui_bootstrap: ^1.0.4
+- swiss_knife: ^2.5.5
+- mercury_client: ^1.1.9
+- dynamic_call: ^1.0.11
+
 ## 1.0.10
 
 - AccessTokeState: for login resume.

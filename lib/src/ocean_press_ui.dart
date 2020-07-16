@@ -298,7 +298,7 @@ class OPMenu extends UIComponent implements GlobalUserListener {
   }
 }
 
-class OPMenuLoginButton extends UIButton implements GlobalUserListener {
+class OPMenuLoginButton extends UIButtonBase implements GlobalUserListener {
   OPMenuLoginButton(Element parent)
       : super(parent, classes: ['ui-login-button', '!ui-button']);
 

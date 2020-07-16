@@ -8,7 +8,7 @@ IntlMessages OCEAN_PRESS_MESSAGES = IntlMessages.package('/ocean_press/')
       'package:ocean_press/i18n/ocean_press-msgs-', '.intl'));
 
 /// Ocean Press Button.
-class OPButton extends UIButton {
+class OPButton extends UIButtonBase {
   final String text;
 
   final String fontSize;
