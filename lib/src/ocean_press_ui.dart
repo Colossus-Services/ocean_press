@@ -487,7 +487,7 @@ class OPMain extends UINavigableContent {
         : companyName;
 
     var divVersion =
-        '<div class="float-right" style="font-size: 80%">v$version</div>';
+        '<div class="text-muted float-right" style="font-size: 80%">v$version</div>';
 
     return createHTML(''' 
     <footer class="footer d-none d-lg-block">
