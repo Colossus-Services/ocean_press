@@ -1,3 +1,5 @@
+@TestOn('browser')
+
 import 'package:test/test.dart';
 
 void main() {
@@ -5,7 +7,7 @@ void main() {
     setUp(() {});
 
     test('Test 1', () {
-      //expect(awesome.isAwesome, isTrue);
+      expect(true, isTrue);
     });
   });
 }
