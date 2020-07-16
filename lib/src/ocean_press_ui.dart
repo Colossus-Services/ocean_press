@@ -474,6 +474,10 @@ class OPMain extends UINavigableContent {
     var companyName = OCEAN_PRESS_APP.companyName;
     if (companyName == null) return null;
 
+    var version = OCEAN_PRESS_APP.version;
+
+    var hasVersion = version != null && version.trim().isNotEmpty;
+
     var year = getDateTimeNow().year;
 
     var companyURL = OCEAN_PRESS_APP.companyURL;
@@ -482,10 +486,14 @@ class OPMain extends UINavigableContent {
         ? '<a href="$companyURL" target="_blank">$companyName</a>'
         : companyName;
 
+    var divVersion =
+        '<div class="float-right" style="font-size: 80%">v$version</div>';
+
     return createHTML(''' 
     <footer class="footer d-none d-lg-block">
       <div class="container">
         <span class="text-muted">Copyright © $year $company - $messageCopyrightAllRightsReserved</span>
+        ${hasVersion ? divVersion : ''}
       </div>
     </footer>
     ''');

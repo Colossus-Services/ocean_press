@@ -51,9 +51,10 @@ class OceanExpressApp {
     Bootstrap.load();
   }
 
-  void configure(String name, OceanAppSystem oceanAppSystem,
+  void configure(String name, String version, OceanAppSystem oceanAppSystem,
       {String companyName, String companyURL, String facebookID}) {
     _name = name;
+    _version = version;
     _id = normalizeID(_name);
     _system = oceanAppSystem;
 
@@ -102,6 +103,14 @@ class OceanExpressApp {
   String _name = 'app';
 
   String get name => _name;
+
+  String _version;
+
+  String get version => _version;
+
+  set version(String value) {
+    _version = value;
+  }
 
   String _companyName;
 

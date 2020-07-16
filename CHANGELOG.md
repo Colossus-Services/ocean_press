@@ -1,3 +1,7 @@
+## 1.0.12
+
+- Added: `OceanExpressApp.version`. When defined shows the version in the UI footer.
+
 ## 1.0.11
 
 - bones_ui: ^1.0.13
