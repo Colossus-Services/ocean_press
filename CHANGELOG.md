@@ -1,3 +1,11 @@
+## 1.0.13
+
+- Removed old `./tool/` scripts.
+- dartanalyzer.
+- bones_ui: ^1.0.15
+- swiss_knife: ^2.5.6
+- intl_messages: ^1.1.9
+
 ## 1.0.12
 
 - Added: `OceanExpressApp.version`. When defined shows the version in the UI footer.
