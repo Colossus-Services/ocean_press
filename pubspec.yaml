@@ -1,17 +1,17 @@
 name: ocean_press
 description: Smooth Web App Framework for easy and fast construction of Web Applications.
-version: 1.0.13
+version: 1.0.14
 homepage: https://github.com/Colossus-Services/ocean_press
 
 environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
-  bones_ui: ^1.0.15
+  bones_ui: ^1.0.16
     #path: ../bones_ui
   bones_ui_bootstrap: ^1.0.4
     #path: ../bones_ui_bootstrap
-  swiss_knife: ^2.5.6
+  swiss_knife: ^2.5.7
     #path: ../swiss_knife
   mercury_client: ^1.1.9
     #path: ../mercury_client
