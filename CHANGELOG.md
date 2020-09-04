@@ -1,3 +1,15 @@
+## 1.0.15
+
+- bones_ui: ^1.0.20
+- bones_ui_bootstrap: ^1.0.6
+- swiss_knife: ^2.5.13
+- mercury_client: ^1.1.12
+- dynamic_call: ^1.0.13   
+- intl_messages: ^1.1.10
+- markdown: ^2.1.8
+- pedantic: ^1.9.2
+- test: ^1.15.3
+
 ## 1.0.14
 
 - bones_ui: ^1.0.16

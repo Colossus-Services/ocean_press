@@ -1,6 +1,6 @@
 library ocean_press;
 
-export 'package:bones_ui/bones_ui.dart';
+export 'package:bones_ui/bones_ui_kit.dart';
 export 'package:bones_ui_bootstrap/bones_ui_bootstrap.dart';
 export 'package:dynamic_call/dynamic_call.dart';
 export 'package:social_login_web/user_login.dart';

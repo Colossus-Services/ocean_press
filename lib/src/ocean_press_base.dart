@@ -1,6 +1,6 @@
 import 'dart:html';
 
-import 'package:bones_ui/bones_ui.dart';
+import 'package:bones_ui/bones_ui_kit.dart';
 import 'package:intl_messages/intl_messages.dart';
 
 IntlMessages OCEAN_PRESS_MESSAGES = IntlMessages.package('/ocean_press/')
@@ -251,7 +251,7 @@ abstract class OPContentSection extends UIContent implements OPSection {
     _route = route;
     _name = name ?? route;
     _hideFromMenu = hideFromMenu ?? false;
-    _deniedAccessRoute = deniedAccessRoute;
+    _deniedAccessRoute = deniedAccessRoute ?? 'home';
     _isAccessible = isAccessible;
   }
 

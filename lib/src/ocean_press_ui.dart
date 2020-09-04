@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:html';
 
-import 'package:bones_ui/bones_ui.dart';
+import 'package:bones_ui/bones_ui_kit.dart';
 import 'package:bones_ui_bootstrap/bones_ui_bootstrap.dart';
 import 'package:intl_messages/intl_messages.dart';
 import 'package:social_login_web/facebook_login.dart';
@@ -285,8 +285,8 @@ class OPMenu extends UIComponent implements GlobalUserListener {
 
     var iconPath = BootstrapIcons.getIconPath(iconName);
 
-    var svg =
-        UISVG(null, iconPath, width: '1.5em', color: color, title: user.name);
+    var svg = UISVG(null,
+        src: iconPath, width: '1.5em', color: color, title: user.name);
 
     Bootstrap.enableTooltipOnRender(svg);
 
@@ -386,6 +386,19 @@ class OPMain extends UINavigableContent {
   }
 
   @override
+  bool isAccessibleRoute(String route) {
+    if (!canNavigateTo(route)) return false;
+    var routeComponent = getRouteComponent(route);
+    return routeComponent != null ? routeComponent.isAccessible() : false;
+  }
+
+  @override
+  String deniedAccessRouteOfRoute(String route) {
+    var routeComponent = getRouteComponent(route);
+    return routeComponent != null ? routeComponent.deniedAccessRoute() : null;
+  }
+
+  @override
   dynamic renderRoute(String route, Map<String, String> parameters) {
     if (route == 'login') {
       if (!OCEAN_PRESS_APP.usesLogin) {
@@ -400,74 +413,71 @@ class OPMain extends UINavigableContent {
       route = OCEAN_PRESS_APP.homeRoute;
     }
 
-    content.classes.removeWhere((c) => c.startsWith('ui-main-bg'));
-
-    var bg = 1;
-
     scrollToTop();
 
     OPRouteBreadcrumb routeBreadcrumb;
-    UIComponent component;
+    var routeComponent = getRouteComponent(route);
 
-    var section = OCEAN_PRESS_APP.getSection(route, content);
-    var sectionComponent = section as UIComponent;
-
-    if (sectionComponent != null) {
-      routeBreadcrumb = OPRouteBreadcrumb(content, [
-        {section.route: section.name}
-      ]);
-
-      sectionComponent.clear();
-      component = sectionComponent;
-    } else if (route == 'home') {
-      component = OPHome(content);
-    } else if (route == 'login') {
-      bg = 2;
-      component = OPHomeLogin(content);
-    } else if (route == 'register') {
-      bg = 2;
-      component = OPRegister(content);
-    } else if (route == 'profile') {
-      bg = 2;
-      component = OPProfile(content);
-    } else if (route == 'changepass') {
-      bg = 2;
-      component = OPChangePass(content);
-    } else if (route == 'logout') {
-      bg = 2;
-      component = OPLogout(content);
-    } else if (route == 'offline') {
-      bg = 2;
-      component = OPOffline(content);
-    }
-
-    if (component is OPPopUpSection) {
-      var popUpSection = component as OPPopUpSection;
+    if (routeComponent is OPPopUpSection) {
+      var popUpSection = routeComponent as OPPopUpSection;
       routeBreadcrumb = OPRouteBreadcrumb(content, [
         {popUpSection.route: popUpSection.routeLabel}
       ]);
     }
 
-    if (component is OPSection) {
-      var opSection = component as OPSection;
+    if (routeComponent is OPSection) {
+      var section = routeComponent as OPSection;
+
+      routeBreadcrumb ??= OPRouteBreadcrumb(content, [
+        {section.route: section.name}
+      ]);
+
+      var opSection = routeComponent as OPSection;
       currentTitle = opSection.currentTitle;
     } else {
       currentTitle = route;
     }
 
-    content.classes.add('ui-main-bg$bg');
-
     scrollToTopDelayed(500);
 
     var footer = _buildFooter();
 
-    if (component == null) return [footer];
+    if (routeComponent == null) return [footer];
 
     var divFinalSpace = createDivInline();
     divFinalSpace.style.width = '100%';
     divFinalSpace.style.height = '100px';
 
-    return [routeBreadcrumb, component, divFinalSpace, footer];
+    return [routeBreadcrumb, routeComponent, divFinalSpace, footer];
+  }
+
+  UIComponent getRouteComponent(String route) {
+    UIComponent component;
+
+    {
+      var section = OCEAN_PRESS_APP.getSection(route, content);
+      var sectionComponent = section as UIComponent;
+
+      if (sectionComponent != null) {
+        sectionComponent.clear();
+        component = sectionComponent;
+      } else if (route == 'home') {
+        component = OPHome(content);
+      } else if (route == 'login') {
+        component = OPHomeLogin(content);
+      } else if (route == 'register') {
+        component = OPRegister(content);
+      } else if (route == 'profile') {
+        component = OPProfile(content);
+      } else if (route == 'changepass') {
+        component = OPChangePass(content);
+      } else if (route == 'logout') {
+        component = OPLogout(content);
+      } else if (route == 'offline') {
+        component = OPOffline(content);
+      }
+    }
+    return component;
   }
 
   dynamic _buildFooter() {
@@ -637,7 +647,8 @@ class OPLoginContent extends UIContent implements GlobalUserListener {
       InputConfig('password', messageLoginPassword,
           type: 'password', attributes: {'onEventKeyPress': 'Enter:login'})
     ])
-      ..id = 'inputs';
+      ..id = 'inputs'
+      ..actionListenerComponent = this;
 
     var buttonLogin = OPButton(content, messageButtonLogin)
       ..id = 'buttonLogin'
