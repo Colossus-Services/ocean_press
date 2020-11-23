@@ -345,6 +345,14 @@ class OceanExpressApp {
 
   ////////
 
+  bool _navBarBlur = false;
+
+  bool get navBarBlur => _navBarBlur;
+
+  set navBarBlur(bool value) {
+    _navBarBlur = value ?? false;
+  }
+
   bool _navBarLogoOnLogin = true;
 
   bool get navBarLogoOnLogin => _navBarLogoOnLogin;

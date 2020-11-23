@@ -200,6 +200,10 @@ class OPMenu extends UIComponent implements GlobalUserListener {
 
   @override
   dynamic render() {
+    if (OCEAN_PRESS_APP.navBarBlur) {
+      setElementBackgroundBlur(content);
+    }
+
     var showLogo = UINavigator.currentRoute != 'login' ||
         OCEAN_PRESS_APP.navBarLogoOnLogin;
 
@@ -499,7 +503,7 @@ class OPMain extends UINavigableContent {
     var divVersion =
         '<div class="text-muted float-right" style="font-size: 80%">v$version</div>';
 
-    return createHTML(''' 
+    var footer = createHTML(''' 
     <footer class="footer d-none d-lg-block">
       <div class="container">
         <span class="text-muted">Copyright © $year $company - $messageCopyrightAllRightsReserved</span>
@@ -507,6 +511,10 @@ class OPMain extends UINavigableContent {
       </div>
     </footer>
     ''');
+
+    setElementBackgroundBlur(footer);
+
+    return footer;
   }
 }
 
