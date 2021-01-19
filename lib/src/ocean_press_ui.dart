@@ -381,6 +381,9 @@ class OPMain extends UINavigableContent {
 
   @override
   void configure() {
+    content.style.width = '100%';
+    content.style.height = '100%';
+
     OPMenu.onResize.listen((e) {
       if (topMargin != UI_MAIN_CONTENT_TOP_MARGIN) {
         topMargin = UI_MAIN_CONTENT_TOP_MARGIN;
